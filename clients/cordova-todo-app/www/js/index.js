@@ -20,7 +20,16 @@
     "use strict";
 
     var client,             // Connection to the Azure Mobile App backend
-        todoItemTable;      // Reference to a table endpoint on backend
+        todoItemTable,      // Reference to a table endpoint on backend
+        adal = {};          // The ADAL storage area
+
+    var adalSettings = {
+        authority: 'https://login.windows.net/common',
+        tenantURI: 'https://photoadrianoutlook.onmicrosoft.com',
+        resourceURI: 'https://graph.windows.net',
+        redirectURI: 'https://30-days-of-zumo-v2.azurewebsites.net',
+        clientID: 'fd71e77f-802b-425f-9143-382c8d384703'
+    };
 
     // Add an event listener to call our initialization routine when the host is ready
     document.addEventListener('deviceready', onDeviceReady, false);
@@ -33,15 +42,46 @@
     function onDeviceReady() {
         // Create a connection reference to our Azure Mobile Apps backend
         client = new WindowsAzure.MobileServiceClient('https://30-days-of-zumo-v2.azurewebsites.net');
-
+        
         // Create a table reference
         todoItemTable = client.getTable('todoitem');
 
         // Wire up the button to initialize the application
         $('#loginButton').on('click', function (event) {
-            client.login('aad').then(initializeApp, function (error) {
-                console.error(error);
-                alert('Failed to login!');
+            event.preventDefault();
+
+            authenticate(function (data) {
+                console.log('data = ', data);
+            });
+
+            //client.login('aad').then(initializeApp, function (error) {
+            //    console.error(error);
+            //    alert('Failed to login!');
+            //});
+        });
+    }
+
+    /**
+     * Authenticate with the ADAL Plugin
+     * @param {function} authCompletedCallback the function to call when complete
+     */
+    function authenticate(authCompletedCallback) {
+        adal.context = new Microsoft.ADAL.AuthenticationContext(adalSettings.authority);
+        adal.context.tokenCache.readItems().then(function (items) {
+            if (items.length > 0) {
+                adalSettings.authority = items[0].authority;
+                adal.context = new Microsoft.ADAL.AuthenticationContext(adalSettings.authority);
+            }
+
+            // Attempt to authorize user silently
+            adal.context.acquireTokenSilentAsync(adalSettings.resourceURI, adalSettings.clientID)
+            .then(authCompletedCallback, function (p) {
+                // We require user cridentials so triggers authentication dialog
+                adal.context.acquireTokenAsync(adalSettings.resourceURI, adalSettings.clientID, adalSettings.redirectURI)
+                .then(authCompletedCallback, function (err) {
+                    console.error('Failed to authenticate via ADAL: ', err);
+                    alert("Failed to authenticate: " + err);
+                });
             });
         });
     }
