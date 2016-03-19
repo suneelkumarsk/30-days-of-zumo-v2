@@ -38,7 +38,12 @@
         todoItemTable = client.getTable('todoitem');
 
         // Wire up the button to initialize the application
-        $('#loginButton').on('click', initializeApp);
+        $('#loginButton').on('click', function (event) {
+            client.login('aad').then(initializeApp, function (error) {
+                console.error(error);
+                alert('Failed to login!');
+            });
+        });
     }
 
     /**
