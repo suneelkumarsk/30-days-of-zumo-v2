@@ -20,15 +20,14 @@
     "use strict";
 
     var client,             // Connection to the Azure Mobile App backend
-        todoItemTable,      // Reference to a table endpoint on backend
-        adal = {};          // The ADAL storage area
+        todoItemTable;      // Reference to a table endpoint on backend
 
-    var adalSettings = {
+    // The ADAL Settings
+    var adal = {
         authority: 'https://login.windows.net/common',
-        tenantURI: 'https://photoadrianoutlook.onmicrosoft.com',
-        resourceURI: 'https://graph.windows.net',
-        redirectURI: 'https://30-days-of-zumo-v2.azurewebsites.net',
-        clientID: 'fd71e77f-802b-425f-9143-382c8d384703'
+        resourceUri: 'https://30-days-of-zumo-v2.azurewebsites.net',
+        redirectUri: 'https://30-days-of-zumo-v2.azurewebsites.net/.auth/login/done',
+        clientId: 'f35243c4-a4da-4b97-8beb-6a1cf2f76976'
     };
 
     // Add an event listener to call our initialization routine when the host is ready
@@ -51,13 +50,13 @@
             event.preventDefault();
 
             authenticate(function (data) {
-                console.log('data = ', data);
+                console.log(data);
+                client.login('aad', { 'access_token': data.accessToken })
+                .then(initializeApp, function (error) {
+                    console.error(error);
+                    alert('Failed to authenticate to ZUMO!');
+                });
             });
-
-            //client.login('aad').then(initializeApp, function (error) {
-            //    console.error(error);
-            //    alert('Failed to login!');
-            //});
         });
     }
 
@@ -66,18 +65,18 @@
      * @param {function} authCompletedCallback the function to call when complete
      */
     function authenticate(authCompletedCallback) {
-        adal.context = new Microsoft.ADAL.AuthenticationContext(adalSettings.authority);
+        adal.context = new Microsoft.ADAL.AuthenticationContext(adal.authority);
         adal.context.tokenCache.readItems().then(function (items) {
             if (items.length > 0) {
-                adalSettings.authority = items[0].authority;
-                adal.context = new Microsoft.ADAL.AuthenticationContext(adalSettings.authority);
+                adal.authority = items[0].authority;
+                adal.context = new Microsoft.ADAL.AuthenticationContext(adal.authority);
             }
 
             // Attempt to authorize user silently
-            adal.context.acquireTokenSilentAsync(adalSettings.resourceURI, adalSettings.clientID)
+            adal.context.acquireTokenSilentAsync(adal.resourceUri, adal.clientId)
             .then(authCompletedCallback, function (p) {
                 // We require user cridentials so triggers authentication dialog
-                adal.context.acquireTokenAsync(adalSettings.resourceURI, adalSettings.clientID, adalSettings.redirectURI)
+                adal.context.acquireTokenAsync(adal.resourceUri, adal.clientId, adal.redirectUri)
                 .then(authCompletedCallback, function (err) {
                     console.error('Failed to authenticate via ADAL: ', err);
                     alert("Failed to authenticate: " + err);
