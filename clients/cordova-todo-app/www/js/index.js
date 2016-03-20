@@ -22,7 +22,7 @@
     var client,             // Connection to the Azure Mobile App backend
         todoItemTable;      // Reference to a table endpoint on backend
 
-    The ADAL Settings
+    // The ADAL Settings
     var adal = {
        authority: 'https://login.windows.net/common',
        resourceUri: 'https://30-days-of-zumo-v2.azurewebsites.net',
