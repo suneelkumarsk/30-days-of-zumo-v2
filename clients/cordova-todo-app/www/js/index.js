@@ -23,12 +23,17 @@
         todoItemTable;      // Reference to a table endpoint on backend
 
     // The ADAL Settings
-    var adal = {
-        authority: 'https://login.windows.net/common',
-        resourceUri: 'https://30-days-of-zumo-v2.azurewebsites.net',
-        redirectUri: 'https://30-days-of-zumo-v2.azurewebsites.net/.auth/login/done',
-        clientId: 'f35243c4-a4da-4b97-8beb-6a1cf2f76976'
-    };
+    //var adal = {
+    //    authority: 'https://login.windows.net/common',
+    //    resourceUri: 'https://30-days-of-zumo-v2.azurewebsites.net',
+    //    redirectUri: 'https://30-days-of-zumo-v2.azurewebsites.net/.auth/login/done',
+    //    clientId: 'f35243c4-a4da-4b97-8beb-6a1cf2f76976'
+    //};
+
+    var auth0 = {
+        clientId: '04pHmxVuhYU1QTDo4lEojLo1sseRLfKG',
+        domain: 'shellmonger.auth0.com'
+    }
 
     // Add an event listener to call our initialization routine when the host is ready
     document.addEventListener('deviceready', onDeviceReady, false);
@@ -45,18 +50,42 @@
         // Create a table reference
         todoItemTable = client.getTable('todoitem');
 
+        // Set up auth0
+        auth0.lock = new Auth0Lock(auth0.clientId, auth0.domain);
+        auth0.options = {
+            focus: true,
+            popup: true,
+            rememberLastLogin: true,
+            authParams: { scope: 'openid email name' },
+        };
+
         // Wire up the button to initialize the application
         $('#loginButton').on('click', function (event) {
             event.preventDefault();
 
-            authenticate(function (data) {
-                console.log(data);
-                client.login('aad', { 'access_token': data.accessToken })
-                .then(initializeApp, function (error) {
-                    console.error(error);
-                    alert('Failed to authenticate to ZUMO!');
-                });
+            auth0.lock.show(auth0.options, function (err, profile, token) {
+                auth0.lock.hide();
+                if (err) {
+                    console.error('Error authenticating with Auth0: ', err);
+                    alert(err);
+                } else {
+                    client.currentUser = {
+                        id: profile.user_id,
+                        profile: profile,
+                        mobileServiceAuthenticationToken: token
+                    };
+                    initializeApp();
+                }
             });
+
+            //authenticate(function (data) {
+            //    console.log(data);
+            //    client.login('aad', { 'access_token': data.accessToken })
+            //    .then(initializeApp, function (error) {
+            //        console.error(error);
+            //        alert('Failed to authenticate to ZUMO!');
+            //    });
+            //});
         });
     }
 
@@ -64,26 +93,26 @@
      * Authenticate with the ADAL Plugin
      * @param {function} authCompletedCallback the function to call when complete
      */
-    function authenticate(authCompletedCallback) {
-        adal.context = new Microsoft.ADAL.AuthenticationContext(adal.authority);
-        adal.context.tokenCache.readItems().then(function (items) {
-            if (items.length > 0) {
-                adal.authority = items[0].authority;
-                adal.context = new Microsoft.ADAL.AuthenticationContext(adal.authority);
-            }
+    //function authenticate(authCompletedCallback) {
+    //    adal.context = new Microsoft.ADAL.AuthenticationContext(adal.authority);
+    //    adal.context.tokenCache.readItems().then(function (items) {
+    //        if (items.length > 0) {
+    //            adal.authority = items[0].authority;
+    //            adal.context = new Microsoft.ADAL.AuthenticationContext(adal.authority);
+    //        }
 
-            // Attempt to authorize user silently
-            adal.context.acquireTokenSilentAsync(adal.resourceUri, adal.clientId)
-            .then(authCompletedCallback, function (p) {
-                // We require user cridentials so triggers authentication dialog
-                adal.context.acquireTokenAsync(adal.resourceUri, adal.clientId, adal.redirectUri)
-                .then(authCompletedCallback, function (err) {
-                    console.error('Failed to authenticate via ADAL: ', err);
-                    alert("Failed to authenticate: " + err);
-                });
-            });
-        });
-    }
+    //        // Attempt to authorize user silently
+    //        adal.context.acquireTokenSilentAsync(adal.resourceUri, adal.clientId)
+    //        .then(authCompletedCallback, function (p) {
+    //            // We require user cridentials so triggers authentication dialog
+    //            adal.context.acquireTokenAsync(adal.resourceUri, adal.clientId, adal.redirectUri)
+    //            .then(authCompletedCallback, function (err) {
+    //                console.error('Failed to authenticate via ADAL: ', err);
+    //                alert("Failed to authenticate: " + err);
+    //            });
+    //        });
+    //    });
+    //}
 
     /**
      * Called after the entry button is clicked to clean up the old HTML and add our HTML

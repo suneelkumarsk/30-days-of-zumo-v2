@@ -20,7 +20,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://30-days-of-zumo-v2.azurewebsites.net; style-src 'self'; media-src *">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://30-days-of-zumo-v2.azurewebsites.net; connect-src https://shellmonger.auth0.com https://30-days-of-zumo-v2.azurewebsites.net; script-src https://cdn.auth0.com https://shellmonger.auth0.com 'self'; style-src https://cdn.auth0.com 'self' 'unsafe-inline'; font-src https://cdn.auth0.com data: 'self'; img-src http://cdn.auth0.com https://www.gravatar.com data: 'self'; media-src *">
         <meta name="format-detection" content="telephone=no" />
         <meta name="viewport" content="width=device-width, user-scalable=no" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
@@ -36,5 +36,6 @@
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+        <script type="text/javascript" src="https://cdn.auth0.com/js/lock-8.2.min.js"></script>
     </body>
 </html>
