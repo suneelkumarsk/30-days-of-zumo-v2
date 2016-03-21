@@ -120,6 +120,7 @@
 
     /**
      * Event handler for the refresh button
+     * @param {Event} event the event causing the call
      * @event
      */
     function handleRefresh(event) {
