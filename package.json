@@ -13,7 +13,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "azure-mobile-apps": "^2.0.0",
+    "azure-mobile-apps": "azure/azure-mobile-apps-node",
     "express": "^4.13.0",
     "swagger-ui": "^2.1.4"
   },
