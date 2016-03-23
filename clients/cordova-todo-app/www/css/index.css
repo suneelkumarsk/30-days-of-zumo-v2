@@ -25,12 +25,51 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    font-family: Arial, Helvetica; 
+    font-family: Arial, Helvetica;
     background-color: #e0e0e0;
     height:100%;
     margin:0px;
     padding:0px;
     width:100%;
+    background: url('./cloud.jpg') no-repeat fixed cover;
+}
+
+#loginButtonWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#loginButton {
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+#loginButton:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
 }
 
 button { border: 1px solid #999; color: #555; background-color: #F4F4FA; padding: 0 10px; }
@@ -66,4 +105,3 @@ header h2 { text-transform: uppercase; font-weight: normal; color: white; font-s
 footer { text-align: center; font-size: 0.8em; margin-top: 20px; }
 footer a { color: #666; display: block; }
 #errorlog { color: red; font-weight: bold; padding: 8px; display: inline-block; text-align: left; }
-

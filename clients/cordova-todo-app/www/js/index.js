@@ -93,7 +93,8 @@
 
         // Replace the wrapper with the main content from the original Todo App
         var content =
-              '<article>'
+              '<div id="wrapper">'
+            + '<article>'
             + '  <header>'
             + '    <h2>Azure</h2><h1>Mobile Apps</h1>'
             + '    <form id="add-item">'
@@ -105,8 +106,9 @@
             + '  <ul id="todo-items"></ul>'
             + '  <p id="summary">Initializing...</p>'
             + '</article>'
-            + '<footer><ul id="errorlog"></ul></footer>';
-        $('#wrapper').html(content);
+            + '<footer><ul id="errorlog"></ul></footer>'
+            + '</div>';
+        $('#page').html(content);
 
         // Refresh the todoItems
         refreshDisplay();
@@ -118,6 +120,7 @@
 
     /**
      * Event handler for the refresh button
+     * @param {Event} event the event causing the call
      * @event
      */
     function handleRefresh(event) {
