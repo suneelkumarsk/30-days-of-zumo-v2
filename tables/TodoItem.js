@@ -4,6 +4,6 @@ var azureMobileApps = require('azure-mobile-apps');
 var table = azureMobileApps.table();
 
 // Require authentication
-table.authenticated = true;
+table.access = 'authenticated';
 
 module.exports = table;
