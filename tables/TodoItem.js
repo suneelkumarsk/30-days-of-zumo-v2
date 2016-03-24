@@ -8,30 +8,35 @@ table.access = 'authenticated';
 
 // CREATE operation
 table.insert(function (context) {
-  context.item.userId = context.user.id;
-  return context.execute();
+  context.user.getIdentity().then(function (userInfo) {
+    context.item.userId = userInfo.aad.claims.emailaddress;
+    return context.execute();
+  });
 });
 
 // READ operation
 table.read(function (context) {
   context.user.getIdentity().then(function (userInfo) {
-    console.log('user.getIdentity = ', JSON.stringify(userInfo));
-    context.query.where({ userId: context.user.id });
+    context.query.where({ userId: userInfo.aad.claims.emailaddress });
     return context.execute();
   });
 });
 
 // UPDATE operation
 table.update(function (context) {
-  context.query.where({ userId: context.user.id });
-  context.item.userId = context.user.id;
-  return context.execute();
+  context.user.getIdentity().then(function (userInfo) {
+    context.query.where({ userId: userInfo.aad.claims.emailaddress });
+    context.item.userId = userInfo.aad.claims.emailaddress;
+    return context.execute();
+  });
 });
 
 // DELETE operation
 table.delete(function (context) {
-  context.query.where({ userId: context.user.id });
-  return context.execute();
+  context.user.getIdentity().then(function (userInfo) {
+    context.query.where({ userId: userInfo.aad.claims.emailaddress });
+    return context.execute();
+  });
 });
 
 module.exports = table;
