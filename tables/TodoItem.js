@@ -14,9 +14,11 @@ table.insert(function (context) {
 
 // READ operation
 table.read(function (context) {
-  console.log('context.user = ', JSON.stringify(context.user));
-  context.query.where({ userId: context.user.id });
-  return context.execute();
+  context.user.getIdentity().then(function (userInfo) {
+    console.log('user.getIdentity = ', JSON.stringify(userInfo));
+    context.query.where({ userId: context.user.id });
+    return context.execute();
+  });
 });
 
 // UPDATE operation
