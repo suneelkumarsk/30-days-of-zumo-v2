@@ -14,6 +14,7 @@ table.insert(function (context) {
 
 // READ operation
 table.read(function (context) {
+  console.log('context.user = ', JSON.stringify(context.user));
   context.query.where({ userId: context.user.id });
   return context.execute();
 });
