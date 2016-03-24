@@ -18,7 +18,8 @@
         todoItemTable = client.getTable('todoitem');
 
         // Success and failure
-        function authSuccess() {
+        function authSuccess(data) {
+          console.info('Authentication succeeded: data = ', data);
           initializeApp();
         }
 
