@@ -18,11 +18,11 @@
         todoItemTable = client.getTable('todoitem');
 
         // Success and failure
-        function authSuccess {
+        function authSuccess() {
           initializeApp();
         }
 
-        function authFailed {
+        function authFailed() {
           alert('AUTH FAILED!');
         }
 
@@ -65,7 +65,7 @@
         $('#add').on('click', addItemHandler);
         $('#refresh').on('click', handleRefresh);
     }
-    
+
     /**
      * Refresh the items within a page
      */
