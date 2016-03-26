@@ -22,14 +22,6 @@
     var client,             // Connection to the Azure Mobile App backend
         todoItemTable;      // Reference to a table endpoint on backend
 
-    // The ADAL Settings
-    var adal = {
-       authority: 'https://login.windows.net/common',
-       resourceUri: 'https://30-days-of-zumo-v2.azurewebsites.net',
-       redirectUri: 'https://30-days-of-zumo-v2.azurewebsites.net/.auth/login/done',
-       clientId: 'f35243c4-a4da-4b97-8beb-6a1cf2f76976'
-    };
-
     // Add an event listener to call our initialization routine when the host is ready
     document.addEventListener('deviceready', onDeviceReady, false);
 
@@ -49,40 +41,11 @@
         $('#loginButton').on('click', function (event) {
             event.preventDefault();
 
-            authenticate(function (data) {
-               console.log(data);
-               client.login('aad', { 'access_token': data.accessToken })
-               .then(initializeApp, function (error) {
-                   console.error(error);
-                   alert('Failed to authenticate to ZUMO!');
-               });
+            client.login('aad').then(initializeApp, function (err) {
+                console.error('Authentication Failed: ', err);
+                alert('Authentication Failed');
             });
         });
-    }
-
-    /**
-     * Authenticate with the ADAL Plugin
-     * @param {function} authCompletedCallback the function to call when complete
-     */
-    function authenticate(authCompletedCallback) {
-       adal.context = new Microsoft.ADAL.AuthenticationContext(adal.authority);
-       adal.context.tokenCache.readItems().then(function (items) {
-           if (items.length > 0) {
-               adal.authority = items[0].authority;
-               adal.context = new Microsoft.ADAL.AuthenticationContext(adal.authority);
-           }
-
-           // Attempt to authorize user silently
-           adal.context.acquireTokenSilentAsync(adal.resourceUri, adal.clientId)
-           .then(authCompletedCallback, function (p) {
-               // We require user cridentials so triggers authentication dialog
-               adal.context.acquireTokenAsync(adal.resourceUri, adal.clientId, adal.redirectUri)
-               .then(authCompletedCallback, function (err) {
-                   console.error('Failed to authenticate via ADAL: ', err);
-                   alert("Failed to authenticate: " + err);
-               });
-           });
-       });
     }
 
     /**
@@ -96,7 +59,7 @@
               '<div id="wrapper">'
             + '<article>'
             + '  <header>'
-            + '    <h2>Azure</h2><h1>Mobile Apps</h1>'
+            + '    <div id="title"><h2>Azure</h2><h1>Mobile Apps</h1></div><div id="rt-title"><button id="reftoken">Token</button></div>'
             + '    <form id="add-item">'
             + '      <button id="refresh">Refresh</button>'
             + '      <button id="add">Add</button>'
@@ -116,6 +79,18 @@
         // Wire up the UI Event Handler for the Add Item
         $('#add').on('click', addItemHandler);
         $('#refresh').on('click', handleRefresh);
+        $('#reftoken').on('click', handleTokenRefresh);
+    }
+
+    /**
+     * Event Handler for clicking on the token button
+     */
+    function handleTokenRefresh(event) {
+        event.preventDefault();
+
+        client._request('GET', '/.auth/refresh', function (data) {
+            console.info('refresh data = ', data);
+        });
     }
 
     /**
