@@ -88,8 +88,17 @@
     function handleTokenRefresh(event) {
         event.preventDefault();
 
-        client._request('GET', '/.auth/refresh', function (data) {
-            console.info('refresh data = ', data);
+        client._request('GET', '/.auth/refresh', function (error, response) {
+            if (error != null) {
+                console.error('Auth Refresh: Error = ', error);
+                alert('Authentication Refresh Failed');
+            } else if (response.status !== 200) {
+                console.warn('Auth Refresh: Status = ', response.status, response.statusText);
+            } else {
+                var data = response.response;
+                client.currentUser.mobileServiceAuthenticationToken = data.authenticationToken;
+                console.info('Auth Refresh: New Token Received and stored');
+            }
         });
     }
 
