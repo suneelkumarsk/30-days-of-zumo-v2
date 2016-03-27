@@ -17,11 +17,14 @@ table.insert(function (context) {
 // READ operation
 table.read(function (context) {
   console.log('context.user = ', JSON.stringify(context.user));
-  return context.user.getIdentity().then(function (userInfo) {
-    console.log('userInfo.aad.claims = ', JSON.stringify(userInfo.aad.claims));
-    context.query.where({ userId: userInfo.aad.claims.emailaddress });
-    return context.execute();
-  });
+    return context.user.getIdentity().then(function (userInfo) {
+        console.log('userInfo.aad.claims = ', JSON.stringify(userInfo.aad.claims));
+        context.query.where({ userId: userInfo.aad.claims.emailaddress });
+        return context.execute();
+    }).then(function (response) {
+        console.log('read.execute response = ', response);
+        return response;
+    });
 });
 
 // UPDATE operation
