@@ -4,7 +4,7 @@ var azureMobileApps = require('azure-mobile-apps');
 var table = azureMobileApps.table();
 
 // Require authentication
-table.access = 'authenticated';
+table.access = 'disabled';
 
 // CREATE operation
 table.insert(function (context) {

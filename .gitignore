@@ -40,3 +40,8 @@ jspm_packages
 # Local Development Files
 azureMobile.js
 
+# NTVS Files
+.ntvs_analysis.dat
+.vs/
+obj/
+
