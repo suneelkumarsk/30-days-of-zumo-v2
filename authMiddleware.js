@@ -1,4 +1,4 @@
-var authCache = {}, groupsCache = {};
+var authCache = {};
 
 /**
  * Middleware for adding the email address and security groups to the
@@ -9,48 +9,30 @@ var authCache = {}, groupsCache = {};
  * @returns {any} the result of the next middleware
  */
 function authMiddleware(request, response, next) {
-  if (typeof request.azureMobile.user.id == 'undefined')
+  if (typeof request.azureMobile.user === 'undefined')
+    return next();
+  if (typeof request.azureMobile.user.id === 'undefined')
     return next();
 
-  getEmailAddress(request.azureMobile.user)
-  .then(function (emailaddress) {
-    request.azureMobile.user.emailaddress = emailaddress;
-    return getAADGroups(request.azureMobile.user);
-  })
-  .then(function (groups) {
-    request.azureMobile.user.groups = groups;
-    return next();
-  });
-}
+  var user = request.azureMobile.user;
+  if (typeof authCache[user.id] === 'undefined') {
+    user.getIdentity().then(function (userInfo) {
 
-/**
- * Obtain the email address of the user
- * @param {Azure.User} user the user request object
- * @returns {string} the email address
- */
-function getEmailAddress(user) {
-  // Check to see if the user is in the cache
-  if (typeof authCache[user.id] !== 'undefined')
-    return new Promise(function (resolve, reject) { return resolve(authCache[user.id]); });
+      console.log('-----------------------------------------');
+      console.log('USERINFO = ', JSON.stringify(userInfo, 4));
+      console.log('-----------------------------------------');
 
-  return user.getIdentity()
-    .then(function (userInfo) {
-      authCache[user.id] = userInfo.aad.claims.emailaddress;
-      return authCache[user.id];
+      authCache[user.id] = {
+        emailaddress: userInfo.claims.aad.emailaddress
+      };
+
+      user.emailaddress = authCache[user.id].emailaddress;
+      return next();
     });
-}
-
-/**
- * Obtain the groups the user belongs to
- * @param {Azure.User} user the user request object
- * @returns {string[]} the list of groups
- */
-function getAADGroups(user) {
-  if (typeof groupsCache[user.id] !== 'undefined')
-    return new Promise(function (resolve, reject) { return resolve(groupsCache[user.id]); });
-
-  // Default
-  return new Promise(function (resolve, reject) { return resolve([]); });
+  } else {
+    user.emailaddress = authCache[user.id].emailaddress;
+    return next();
+  }
 }
 
 module.exports = authMiddleware;
