@@ -31,7 +31,7 @@ function authMiddleware(request, response, next) {
 function getEmailAddress(user) {
   // Check to see if the user is in the cache
   if (typeof authCache[user.id] !== 'undefined')
-    return authCache[user.id];
+    return new Promise(function (resolve, reject) { return resolve(authCache[user.id]); });
 
   return user.getIdentity()
     .then(function (userInfo) {
@@ -47,9 +47,10 @@ function getEmailAddress(user) {
  */
 function getAADGroups(user) {
   if (typeof groupsCache[user.id] !== 'undefined')
-    return groupsCache[user.id];
+    return new Promise(function (resolve, reject) { return resolve(groupsCache[user.id]); });
 
-  return [];
+  // Default
+  return new Promise(function (resolve, reject) { return resolve([]); });
 }
 
 module.exports = authMiddleware;
