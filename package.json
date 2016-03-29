@@ -17,7 +17,6 @@
     "azure-mobile-apps-client": "^2.0.0-beta5",
     "express": "^4.13.0",
     "node-fetch": "^1.4.1",
-    "query.js": "git://github.com/Azure/queryjs",
     "swagger-ui": "^2.1.4"
   },
   "devDependencies": {}
