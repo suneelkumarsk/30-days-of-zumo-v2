@@ -19,11 +19,17 @@ function authMiddleware(request, response, next) {
     user.getIdentity().then(function (userInfo) {
 
       console.log('-----------------------------------------');
-      console.log('USERINFO = ', JSON.stringify(userInfo, 4));
+      console.log('USERINFO = ', JSON.stringify(userInfo));
       console.log('-----------------------------------------');
 
+      var groups = userInfo.user_claims.reduce(function (target, claim) {
+        if (claim.typ === 'groups') target.push(claim.val);
+      }, []);
+      console.log('GROUPS = ', JSON.stringify(userInfo));
+
       authCache[user.id] = {
-        emailaddress: userInfo.claims.aad.emailaddress
+        emailaddress: userInfo.claims.aad.emailaddress,
+        groups: groups
       };
 
       user.emailaddress = authCache[user.id].emailaddress;
