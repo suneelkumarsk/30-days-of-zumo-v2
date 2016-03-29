@@ -27,6 +27,7 @@ var authCache = {};
                     console.log('REDUCE: target = ', JSON.stringify(target));
                     if (claim.typ === 'groups') target.push(claim.val);
                     console.log('REDUCE: newtarget = ', JSON.stringify(target));
+                    return target;
                 }, []);
 
                 console.log('-----------------------------------------');
