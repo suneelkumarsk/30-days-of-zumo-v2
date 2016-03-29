@@ -8,37 +8,43 @@ var authCache = {};
  * @param {function} next the next piece of middleware
  * @returns {any} the result of the next middleware
  */
-function authMiddleware(request, response, next) {
-  if (typeof request.azureMobile.user === 'undefined')
-    return next();
-  if (typeof request.azureMobile.user.id === 'undefined')
-    return next();
+    function authMiddleware(request, response, next) {
+        if (typeof request.azureMobile.user === 'undefined')
+            return next();
+        if (typeof request.azureMobile.user.id === 'undefined')
+            return next();
 
-  var user = request.azureMobile.user;
-  if (typeof authCache[user.id] === 'undefined') {
-    user.getIdentity().then(function (userInfo) {
+        var user = request.azureMobile.user;
+        if (typeof authCache[user.id] === 'undefined') {
+            user.getIdentity().then(function (userInfo) {
 
-      console.log('-----------------------------------------');
-      console.log('USERINFO = ', JSON.stringify(userInfo));
-      console.log('-----------------------------------------');
+                console.log('-----------------------------------------');
+                console.log('USERINFO = ', JSON.stringify(userInfo));
+                console.log('-----------------------------------------');
 
-      var groups = userInfo.user_claims.reduce(function (target, claim) {
-        if (claim.typ === 'groups') target.push(claim.val);
-      }, []);
-      console.log('GROUPS = ', JSON.stringify(userInfo));
+                var groups = userInfo.user_claims.reduce(function (target, claim) {
+                    console.log('REDUCE: claim = ', JSON.stringify(claim));
+                    console.log('REDUCE: target = ', JSON.stringify(target));
+                    if (claim.typ === 'groups') target.push(claim.val);
+                    console.log('REDUCE: newtarget = ', JSON.stringify(target));
+                }, []);
 
-      authCache[user.id] = {
-        emailaddress: userInfo.claims.aad.emailaddress,
-        groups: groups
-      };
+                console.log('-----------------------------------------');
+                console.log('GROUPS = ', JSON.stringify(groups));
+                console.log('-----------------------------------------');
 
-      user.emailaddress = authCache[user.id].emailaddress;
-      return next();
-    });
-  } else {
-    user.emailaddress = authCache[user.id].emailaddress;
-    return next();
-  }
-}
+                authCache[user.id] = {
+                    emailaddress: userInfo.claims.aad.emailaddress,
+                    groups: groups
+                };
+
+                user.emailaddress = authCache[user.id].emailaddress;
+                return next();
+            });
+        } else {
+            user.emailaddress = authCache[user.id].emailaddress;
+            return next();
+        }
+    }
 
 module.exports = authMiddleware;
