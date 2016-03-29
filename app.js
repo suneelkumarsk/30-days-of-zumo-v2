@@ -1,6 +1,7 @@
 var express = require('express'),
     serveStatic = require('serve-static'),
-    azureMobileApps = require('azure-mobile-apps');
+    azureMobileApps = require('azure-mobile-apps'),
+    authMiddleware = require('./authMiddleware');
 
 // Set up a standard Express app
 var app = express();
@@ -9,6 +10,7 @@ var mobileApp = azureMobileApps({
     swagger: true
 });
 
+mobileApp.use(authMiddleware);
 mobileApp.tables.import('./tables');
 mobileApp.api.import('./api');
 
