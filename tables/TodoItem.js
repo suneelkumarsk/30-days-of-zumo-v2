@@ -34,7 +34,7 @@ table.delete(function (context) {
     // Authorization - if Administrators is not in the group list, don't allow deletion
     if (context.user.groups.indexOf('92d92697-1242-4d38-9c1d-00f3ea0d0640') < 0) {
         console.log('user is not a member of Administrators');
-        context.response.status(401).send('Only Administrators can do this');
+        context.res.status(401).send('Only Administrators can do this');
         return;
     }
 
