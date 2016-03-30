@@ -29,7 +29,7 @@ function authMiddleware(request, response, next) {
         request.azureMobile.user.getIdentity().then(function (userInfo) {
             var groups = userInfo.aad.user_claims.reduce(groupReducer, []);
             console.log('userInfo.aad.claims = ', userInfo.aad.claims);
-            var email = userInfo.aad.claims.emailaddress || userInfo.aad.claims.user_id;
+            var email = userInfo.aad.claims.emailaddress || userInfo.aad.claims.upn;
             authCache[request.azureMobile.user.id] = {
                 emailaddress: email,
                 groups: groups
