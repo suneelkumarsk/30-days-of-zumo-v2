@@ -8,6 +8,7 @@ table.access = 'authenticated';
 
 // CREATE operation
 table.insert(function (context) {
+    console.log('INSERT: context.user = ', context.user);
     context.item.userId = context.user.emailaddress;
     return context.execute();
 });
@@ -21,6 +22,7 @@ table.read(function (context) {
 
 // UPDATE operation
 table.update(function (context) {
+    console.log('UPDATE: context.user = ', context.user);
     context.query.where({ userId: context.user.emailaddress });
     context.item.userId = context.user.emailaddress;
     return context.execute();
@@ -28,6 +30,7 @@ table.update(function (context) {
 
 // DELETE operation
 table.delete(function (context) {
+    console.log('DELETE: context.user = ', context.user);
     // Authorization - if Administrators is not in the group list, don't allow deletion
     if (context.user.groups.indexOf('92d92697-1242-4d38-9c1d-00f3ea0d0640') < 0) {
         console.log('user is not a member of Administrators');
