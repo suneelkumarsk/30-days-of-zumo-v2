@@ -22,13 +22,7 @@ var authCache = {};
                 console.log('USERINFO = ', JSON.stringify(userInfo));
                 console.log('-----------------------------------------');
 
-                var groups = userInfo.user_claims.reduce(function (target, claim) {
-                    console.log('REDUCE: claim = ', JSON.stringify(claim));
-                    console.log('REDUCE: target = ', JSON.stringify(target));
-                    if (claim.typ === 'groups') target.push(claim.val);
-                    console.log('REDUCE: newtarget = ', JSON.stringify(target));
-                    return target;
-                }, []);
+                var groups = userInfo.user_claims;
 
                 console.log('-----------------------------------------');
                 console.log('GROUPS = ', JSON.stringify(groups));
