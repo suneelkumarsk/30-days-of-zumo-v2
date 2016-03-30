@@ -28,8 +28,9 @@ function authMiddleware(request, response, next) {
     if (typeof authCache[request.azureMobile.user.id] === 'undefined') {
         request.azureMobile.user.getIdentity().then(function (userInfo) {
             var groups = userInfo.aad.user_claims.reduce(groupReducer, []);
+            var email = userInfo.aad.claims.emailaddress || userInfo.aad.claims.user_id;
             authCache[request.azureMobile.user.id] = {
-                emailaddress: userInfo.aad.claims.emailaddress,
+                emailaddress: email,
                 groups: groups
             };
 
