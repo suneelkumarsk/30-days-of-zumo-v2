@@ -4,7 +4,7 @@ var azureMobileApps = require('azure-mobile-apps');
 var table = azureMobileApps.table();
 
 // Require authentication
-table.access = 'anonymous';
+table.access = 'authenticated';
 
 // CREATE operation
 table.insert(function (context) {
