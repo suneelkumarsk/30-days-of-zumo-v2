@@ -29,16 +29,16 @@ table.update(function (context) {
 });
 
 // DELETE operation
-table.delete(function (context) {
-    console.log('DELETE: context.user = ', context.user);
-    // Authorization - if Administrators is not in the group list, don't allow deletion
-    if (context.user.groups.indexOf('92d92697-1242-4d38-9c1d-00f3ea0d0640') < 0) {
-        console.log('user is not a member of Administrators');
-        context.res.status(401).send('Only Administrators can do this');
+function isAdministrator(request, response, next) {
+    if (request.azureMobile.user.groups.indexOf('92d92697-1242-4d38-9c1d-00f3ea0d0640') < 0) {
+        response.status(401).send('Only Administrators can do this');
         return;
     }
+    next();
+}
 
-    console.log('user is a member of Administrators');
+table.delete.use(isAdministrator, table.operation);
+table.delete(function (context) {
     context.query.where({ userId: context.user.emailaddress });
     return context.execute();
 });
