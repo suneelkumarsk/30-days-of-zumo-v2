@@ -20,9 +20,9 @@ function groupReducer(target, claim) {
  * @returns {any} the result of the next middleware
  */
 function authMiddleware(request, response, next) {
-    if (typeof request.azureMobile.user === 'undefined') {
+    if (typeof request.azureMobile.user === 'undefined')
         return next();
-    if (typeof request.azureMobile.user.id === 'undefined') {
+    if (typeof request.azureMobile.user.id === 'undefined')
         return next();
 
     if (typeof authCache[request.azureMobile.user.id] === 'undefined') {
