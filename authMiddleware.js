@@ -23,17 +23,19 @@ function authMiddleware(request, response, next) {
     console.log('IN authMiddleware');
     if (typeof request.azureMobile.user === 'undefined') {
         console.log('request.azureMobile.user is not set');
-        return next();
+        next();
+        return;
     }
     if (typeof request.azureMobile.user.id === 'undefined') {
         console.log('request.azureMobile.user.id is not set');
-        return next();
+        next();
+        return;
     }
 
     var user = request.azureMobile.user;
     if (typeof authCache[user.id] === 'undefined') {
         console.log('user', user.id, 'does not exist in authCache');
-        return user.getIdentity().then(function (userInfo) {
+        user.getIdentity().then(function (userInfo) {
             console.log('back from getIdentity: emailaddress = ', userInfo.claims.aad.emailaddress);
             var groups = userInfo.aad.user_claims.reduce(groupReducer, []);
             console.log('groups = ', groups);
@@ -47,14 +49,14 @@ function authMiddleware(request, response, next) {
             console.log('storing groups in user object');
             request.azureMobile.user.groups = authCache[user.id].groups;
             console.log('calling next');
-            return next();
+            next();
         });
     } else {
         console.log('user', user.id, 'exists in cache');
         request.azureMobile.user.emailaddress = authCache[user.id].emailaddress;
         request.azureMobile.user.groups = authCache[user.id].groups;
         console.log('calling next');
-        return next();
+        next();
     }
 }
 
