@@ -20,22 +20,23 @@ function groupReducer(target, claim) {
  * @returns {any} the result of the next middleware
  */
 function authMiddleware(request, response, next) {
+    console.log('IN authMiddleware');
     if (typeof request.azureMobile.user === 'undefined') {
-        console.info('request.azureMobile.user is not set');
+        console.log('request.azureMobile.user is not set');
         return next();
     }
     if (typeof request.azureMobile.user.id === 'undefined') {
-        console.info('request.azureMobile.user.id is not set');
+        console.log('request.azureMobile.user.id is not set');
         return next();
     }
 
     var user = request.azureMobile.user;
     if (typeof authCache[user.id] === 'undefined') {
-        console.info('user', user.id, 'does not exist in authCache');
+        console.log('user', user.id, 'does not exist in authCache');
         return user.getIdentity().then(function (userInfo) {
-            console.info('back from getIdentity: emailaddress = ', userInfo.claims.aad.emailaddress);
+            console.log('back from getIdentity: emailaddress = ', userInfo.claims.aad.emailaddress);
             var groups = userInfo.aad.user_claims.reduce(groupReducer, []);
-            console.info('groups = ', groups);
+            console.log('groups = ', groups);
             authCache[user.id] = {
                 emailaddress: userInfo.claims.aad.emailaddress,
                 groups: groups
@@ -49,10 +50,10 @@ function authMiddleware(request, response, next) {
             return next();
         });
     } else {
-        console.info('user', user.id, 'exists in cache');
-        user.emailaddress = authCache[user.id].emailaddress;
-        user.groups = authCache[user.id].groups;
-        console.info('calling next');
+        console.log('user', user.id, 'exists in cache');
+        request.azureMobile.user.emailaddress = authCache[user.id].emailaddress;
+        request.azureMobile.user.groups = authCache[user.id].groups;
+        console.log('calling next');
         return next();
     }
 }
