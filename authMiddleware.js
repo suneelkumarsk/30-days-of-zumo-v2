@@ -32,29 +32,28 @@ function authMiddleware(request, response, next) {
         return;
     }
 
-    var user = request.azureMobile.user;
-    if (typeof authCache[user.id] === 'undefined') {
-        console.log('user', user.id, 'does not exist in authCache');
-        user.getIdentity().then(function (userInfo) {
+    if (typeof authCache[request.azureMobile.user.id] === 'undefined') {
+        console.log('user', request.azureMobile.user.id, 'does not exist in authCache');
+        request.azureMobile.user.getIdentity().then(function (userInfo) {
             console.log('back from getIdentity: emailaddress = ', userInfo.claims.aad.emailaddress);
             var groups = userInfo.aad.user_claims.reduce(groupReducer, []);
             console.log('groups = ', groups);
-            authCache[user.id] = {
+            authCache[request.azureMobile.user.id] = {
                 emailaddress: userInfo.claims.aad.emailaddress,
                 groups: groups
             };
 
             console.log('storing emailaddress in user object');
-            request.azureMobile.user.emailaddress = authCache[user.id].emailaddress;
+            request.azureMobile.user.emailaddress = authCache[request.azureMobile.user.id].emailaddress;
             console.log('storing groups in user object');
-            request.azureMobile.user.groups = authCache[user.id].groups;
+            request.azureMobile.user.groups = authCache[request.azureMobile.user.id].groups;
             console.log('calling next');
             next();
         });
     } else {
-        console.log('user', user.id, 'exists in cache');
-        request.azureMobile.user.emailaddress = authCache[user.id].emailaddress;
-        request.azureMobile.user.groups = authCache[user.id].groups;
+        console.log('user', request.azureMobile.user.id, 'exists in cache');
+        request.azureMobile.user.emailaddress = authCache[request.azureMobile.user.id].emailaddress;
+        request.azureMobile.user.groups = authCache[request.azureMobile.user.id].groups;
         console.log('calling next');
         next();
     }
