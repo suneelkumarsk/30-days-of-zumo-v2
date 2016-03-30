@@ -17,11 +17,7 @@ var authCache = {};
         var user = request.azureMobile.user;
         if (typeof authCache[user.id] === 'undefined') {
             user.getIdentity().then(function (userInfo) {
-
-                console.log('-----------------------------------------');
-                console.log('USERINFO = ', JSON.stringify(userInfo));
-                console.log('-----------------------------------------');
-
+                // Process the user_claims into the groups
                 var groups = userInfo.user_claims;
 
                 console.log('-----------------------------------------');
