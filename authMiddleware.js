@@ -19,10 +19,10 @@ var authCache = {};
             user.getIdentity().then(function (userInfo) {
                 console.log('USERINFO = ', userInfo);
                 // Process the user_claims into the groups
-                var groups = userInfo.user_claims;
+                var groups = userInfo.aad.user_claims;
 
                 console.log('-----------------------------------------');
-                console.log('GROUPS = ', JSON.stringify(groups));
+                console.log('GROUPS = ', groups);
                 console.log('-----------------------------------------');
 
                 authCache[user.id] = {
