@@ -7,7 +7,8 @@ var authCache = {};
  * @returns {string[]} the accumulator
  */
 function groupReducer(target, claim) {
-    if (claim.typ === 'groups') target.push(claim.val);
+    if (claim.typ === 'groups')
+        target.push(claim.val);
     return target;
 }
 /**
