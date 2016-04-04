@@ -20,11 +20,10 @@ table.read(function (context) {
         .select('userId')
         .read()
         .then(function (friends) {
-            friends.push({ userId: context.user.emailaddress });
-            console.log('READ: friends = ', friends);
-            var sqlWhereStmt = 'userId in (' + friends.map(function (item) { return "'" + item.userId + "'"}).join(',') + ')';
-            console.log('READ: sqlWhereStmt = ', sqlWhereStmt);
-            context.query.where(sqlWhereStmt);
+            var list = friends.map(function (f) { return f.userId; });
+            list.push(context.user.emailaddress);
+            console.log('READ: friends = ', list);
+            context.query.where(function (list) { return this.userId in list; });
             return context.execute();
         });
 //    context.query.where({ userId: context.user.emailaddress });
