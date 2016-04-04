@@ -20,7 +20,8 @@ table.read(function (context) {
         .select('userId')
         .read()
         .then(function (friends) {
-            var list = friends.map(function (f) { return f.userId; }).push(context.user.emailaddress);
+            var list = friends.map(function (f) { return f.userId; })
+            list.push(context.user.emailaddress);
             console.log('READ: friends = ', list);
             context.query.where(function(list) { return this.userId in list; }, list);
             return context.execute();
