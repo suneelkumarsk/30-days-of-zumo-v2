@@ -23,7 +23,7 @@ table.read(function (context) {
             var list = friends.map(function (f) { return f.userId; });
             list.push(context.user.emailaddress);
             console.log('READ: friends = ', list);
-            context.query.where(function (list) { return this.userId in list; });
+            context.query.where(function (item) { return list.indexOf(item.userId) >= 0; });
             return context.execute();
         });
 //    context.query.where({ userId: context.user.emailaddress });
