@@ -20,8 +20,11 @@ table.read(function (context) {
         .select('userId')
         .read()
         .then(function (friends) {
+            friends.push({ userId: context.user.emailaddress });
             console.log('READ: friends = ', friends);
-            context.query.where(function (item) { return (item.userId === context.user.emailaddress || friends.indexOf(context.user.emailaddress) >= 0); });
+            var sqlWhereStmt = 'userId in (' + friends.map(function (item) { return "'" + item.userId + "'"}).join(',') + ')';
+            console.log('READ: sqlWhereStmt = ', sqlWhereStmt);
+            context.query.where(sqlWhereStmt);
             return context.execute();
         });
 //    context.query.where({ userId: context.user.emailaddress });
