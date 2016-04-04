@@ -21,7 +21,7 @@ table.read(function (context) {
         .read()
         .then(function (friends) {
             console.log('READ: friends = ', friends);
-            context.query.where(x => friends.contains(context.user.emailaddress));
+            context.query.where(x => { return friends.contains(x.userId); });
             return context.execute();
         });
 //    context.query.where({ userId: context.user.emailaddress });
