@@ -16,18 +16,18 @@ table.insert(function (context) {
 // READ operation
 table.read(function (context) {
     return context.tables('friend')
-        .where({ viewer: context.user.emailaddress })
-        .select('userId')
-        .read()
-        .then(function (friends) {
-            var list = friends.map(function (f) { return f.userId; })
-            list.push(context.user.emailaddress);
-            console.log('READ: friends = ', list);
-            context.query.where(function(list) { return this.userId in list; }, list);
-            return context.execute();
+    .where({ viewer: context.user.emailaddress })
+    .select('userId')
+    .read()
+    .then(function (friends) {
+        var list = friends.map(function (f) { return f.userId; })
+        list.push(context.user.emailaddress);
+        context.query.where(function(list) { return this.userId in list; }, list);
+        return context.execute().then(function (results) {
+          console.log('READ: results = ', results);
+          return results;
         });
-//    context.query.where({ userId: context.user.emailaddress });
-//    return context.execute();
+    });
 });
 
 // UPDATE operation
