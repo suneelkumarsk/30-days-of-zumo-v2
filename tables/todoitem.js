@@ -15,9 +15,16 @@ table.insert(function (context) {
 
 // READ operation
 table.read(function (context) {
-    console.log('READ: context.user = ', context.user);
-    context.query.where({ userId: context.user.emailaddress });
-    return context.execute();
+    return context.tables('friend')
+        .where({ viewer: context.user.emailaddress })
+        .select('userId')
+        .then(function (friends) {
+            console.log('READ: friends = ', friends);
+            context.query.where(x => friends.contains(context.user.emailaddress));
+            return context.execute();
+        });
+//    context.query.where({ userId: context.user.emailaddress });
+//    return context.execute();
 });
 
 // UPDATE operation
