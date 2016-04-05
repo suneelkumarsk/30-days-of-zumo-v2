@@ -19,12 +19,13 @@
 
         // Success and failure
         function authSuccess(data) {
-          console.info('Authentication succeeded: data = ', data);
-          initializeApp();
+            console.info('Authentication succeeded: data = ', data);
+            initializeApp();
         }
 
-        function authFailed() {
-          alert('AUTH FAILED!');
+        function authFailed(error) {
+            console.error('Authentication failed: error = ', error);
+            alert('AUTH FAILED!');
         }
 
         // Wire up the button to initialize the application
@@ -130,8 +131,8 @@
      * @returns {void}
      */
     function handleError(error) {
+        console.error('handleError: ', error);
         var text = error + (error.request ? ' - ' + error.request.status : '');
-        console.error(text);
         $('#errorlog').append($('<li>').text(text));
     }
 
@@ -175,6 +176,7 @@
         var itemId = getTodoItemId(event.currentTarget);
 
         updateSummaryMessage('Deleting Item in Azure');
+        console.info('deleteItemHandler: itemId = ', itemId);
         todoItemTable
             .del({ id: itemId })   // Async send the deletion to backend
             .then(refreshDisplay, handleError); // Update the UI
@@ -191,6 +193,7 @@
             newText = $(event.currentTarget).val();
 
         updateSummaryMessage('Updating Item in Azure');
+        console.info('updateItemTextHandler: itemId = ', itemId);
         todoItemTable
             .update({ id: itemId, text: newText })  // Async send the update to backend
             .then(refreshDisplay, handleError); // Update the UI
@@ -207,6 +210,7 @@
             isComplete = $(event.currentTarget).prop('checked');
 
         updateSummaryMessage('Updating Item in Azure');
+        console.info('updateItemCompleteHandler: itemId = ', itemId);
         todoItemTable
             .update({ id: itemId, complete: isComplete })  // Async send the update to backend
             .then(refreshDisplay, handleError);        // Update the UI
