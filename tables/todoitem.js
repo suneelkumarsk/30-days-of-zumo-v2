@@ -10,6 +10,8 @@ table.access = 'authenticated';
 table.insert(function (context) {
     console.log('INSERT: context.user = ', context.user);
     context.item.userId = context.user.emailaddress;
+    delete context.item.shared;
+    delete context.item.Shared;
     return context.execute();
 });
 
@@ -24,7 +26,10 @@ table.read(function (context) {
         list.push(context.user.emailaddress);
         context.query.where(function(list) { return this.userId in list; }, list);
         return context.execute().then(function (results) {
-          console.log('READ: results = ', results);
+          results.foreach(function (item) {
+            item.shared = (item.userId === context.user.emailaddress);
+          });
+          console.log('results = ', results);
           return results;
         });
     });
@@ -35,6 +40,8 @@ table.update(function (context) {
     console.log('UPDATE: context.user = ', context.user);
     context.query.where({ userId: context.user.emailaddress });
     context.item.userId = context.user.emailaddress;
+    delete context.item.shared;
+    delete context.item.Shared;
     return context.execute();
 });
 
