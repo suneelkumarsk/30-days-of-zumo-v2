@@ -37,19 +37,10 @@ table.read(function (context) {
 
 // UPDATE operation
 table.update(function (context) {
-    console.log('UPDATE: context.user = ', context.user);
-    console.log('UPDATE: context.query =  ', context.query);
-    console.log('UPDATE: context.item = ', context.item);
-
-    console.log('UPDATE: Updating Query');
     context.query.where({ userId: context.user.emailaddress });
-    console.log('UPDATE: Updating Item');
     context.item.userId = context.user.emailaddress;
-    console.log('UPDATE: deleting shared');
     delete context.item.shared;
-    console.log('UPDATE: deleting Shared');
     delete context.item.Shared;
-    console.log('UPDATE: executing the query');
     return context.execute();
 });
 
