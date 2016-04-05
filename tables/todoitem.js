@@ -26,7 +26,7 @@ table.read(function (context) {
         list.push(context.user.emailaddress);
         context.query.where(function(list) { return this.userId in list; }, list);
         return context.execute().then(function (results) {
-          results.foreach(function (item) {
+          results.forEach(function (item) {
             item.shared = (item.userId === context.user.emailaddress);
           });
           console.log('results = ', results);
