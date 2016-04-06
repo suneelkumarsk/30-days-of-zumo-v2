@@ -101,6 +101,7 @@
     function createTodoItem(item) {
         return $('<li>')
             .attr('data-todoitem-id', item.id)
+            .attr('data-todoitem-version', item.version)
             .append($('<button class="item-delete">Delete</button>'))
             .append($('<input type="checkbox" class="item-complete">')
                 .prop('checked', item.complete))
@@ -147,6 +148,16 @@
     }
 
     /**
+     * Given a sub-element of an LI, find the TodoItem Versuin associated with the list member
+     *
+     * @param {DOMElement} el the form element
+     * @returns {string} the Version of the TodoItem
+     */
+    function getTodoItemVersion(el) {
+        return $(el).closest('li').attr('data-todoitem-version');
+    }
+
+    /**
      * Event handler for when the user enters some text and clicks on Add
      * @param {Event} event the event that caused the request
      * @returns {void}
@@ -190,12 +201,13 @@
      */
     function updateItemTextHandler(event) {
         var itemId = getTodoItemId(event.currentTarget),
+            itemVersion = getTodoItemVersion(event.currentTarget),
             newText = $(event.currentTarget).val();
 
         updateSummaryMessage('Updating Item in Azure');
         console.info('updateItemTextHandler: itemId = ', itemId);
         todoItemTable
-            .update({ id: itemId, text: newText })  // Async send the update to backend
+            .update({ id: itemId, version: itemVersion, text: newText })  // Async send the update to backend
             .then(refreshDisplay, handleError); // Update the UI
         event.preventDefault();
     }
@@ -207,12 +219,13 @@
      */
     function updateItemCompleteHandler(event) {
         var itemId = getTodoItemId(event.currentTarget),
+            itemVersion = getTodoItemVersion(event.currentTarget),
             isComplete = $(event.currentTarget).prop('checked');
 
         updateSummaryMessage('Updating Item in Azure');
         console.info('updateItemCompleteHandler: itemId = ', itemId);
         todoItemTable
-            .update({ id: itemId, complete: isComplete })  // Async send the update to backend
+            .update({ id: itemId, version: itemVersion, complete: isComplete })  // Async send the update to backend
             .then(refreshDisplay, handleError);        // Update the UI
     }
 })();
