@@ -1,0 +1,31 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "Azure Mobile Apps Backend",
+  "private": true,
+  "scripts": {
+    "start": "node ./server.js"
+  },
+  "engines": {
+    "node": ">=5.9.0 <6.0.0",
+    "npm": ">=3.6.0"
+  },
+  "author": {
+    "name": "Adrian Hall",
+    "email": "adrian@shellmonger.com"
+  },
+  "bugs": {
+    "url": "https://github.com/adrianhall/30-days-of-zumo-v2/issues"
+  },
+  "main": "server.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrianhall/30-days-of-zumo-v2"
+  },
+  "dependencies": {
+    "azure-mobile-apps": "^2.0.2",
+    "express": "^4.13.4",
+    "serve-static": "^1.10.2"
+  }
+}
