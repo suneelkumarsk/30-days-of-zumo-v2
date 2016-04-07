@@ -31,8 +31,16 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="authMiddleware.js" />
+    <Compile Include="lib\ShellmongerApp.js" />
     <Compile Include="server.js" />
+    <Compile Include="tables\todoitem.js" />
+    <Content Include="jsconfig.json" />
     <Content Include="package.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="lib\" />
+    <Folder Include="tables\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
