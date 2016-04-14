@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Client.UWP.Services
@@ -55,10 +56,14 @@ namespace Client.UWP.Services
 
         public async Task<ObservableCollection<T>> RefreshAsync()
         {
+            Debug.WriteLine($"[AzureDataTable$RefreshAsync] Entry");
             try
             {
-                IEnumerable<T> items = await dataTable.OrderBy(item => item.UpdatedAt).ToEnumerableAsync();
-                dataView = new ObservableCollection<T>();
+                Debug.WriteLine($"[AzureDataTable$RefreshAsync] Requesting Items");
+                List<T> items = await dataTable.OrderBy(item => item.UpdatedAt).ToListAsync();
+                Debug.WriteLine($"[AzureDataTable$RefreshAsync] {items.Count} items received");
+                dataView = new ObservableCollection<T>(items);
+                Debug.WriteLine($"[AzureDataTable$RefreshAsync] {dataView.Count} items available");
                 return dataView;
             }
             catch (MobileServiceInvalidOperationException exception)

@@ -1,10 +1,13 @@
-﻿<UserControl x:Name="userControl"
+﻿<UserControl x:Name="clickableIconUserControl"
     x:Class="Client.UWP.Controls.ClickableIcon"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Client.UWP.Controls">
 
     <Grid>
-        <SymbolIcon x:Name="CIIcon" Symbol="{Binding Icon, ElementName=userControl}" Tapped="CIIcon_Tapped"/>
+        <SymbolIcon x:Name="CIIcon"
+                    Foreground="{Binding Foreground, ElementName=clickableIconUserControl}"
+                    Symbol="{Binding Icon, ElementName=clickableIconUserControl}"
+                    Tapped="CIIcon_Tapped"/>
     </Grid>
 </UserControl>
