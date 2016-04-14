@@ -78,14 +78,14 @@ namespace Client.UWP.Controls
                 Debug.WriteLine($"[ClickableIcon$SetEnabledState] IsEnabled = true");
                 CIIcon.IsTapEnabled = true;
                 Debug.WriteLine($"[ClickableIcon$SetEnabledState] Set Icon Color to {((SolidColorBrush)Foreground).Color}");
-                CIIcon.Foreground = Foreground;
+                CIIcon.Foreground = this.Foreground;
             }
             else
             {
                 Debug.WriteLine($"[ClickableIcon$SetEnabledState] IsEnabled = false");
                 CIIcon.IsTapEnabled = false;
                 Debug.WriteLine($"[ClickableIcon$SetEnabledState] Set Icon Color to {((SolidColorBrush)DisabledColor).Color}");
-                CIIcon.Foreground = DisabledColor;
+                CIIcon.Foreground = this.DisabledColor;
             }
             Debug.WriteLine($"[ClickableIcon$SetEnabledState] Exit");
         }
