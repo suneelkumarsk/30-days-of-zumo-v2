@@ -1,22 +1,11 @@
 ﻿<Page x:Class="Client.UWP.Pages.TasksPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:converters="using:Shellmonger.TaskList.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:Client.UWP.Pages"
+      xmlns:custom="using:Client.UWP.Controls"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d">
-
-    <Page.Resources>
-        <Storyboard x:Name="RefreshIconRotation"
-                    AutoReverse="False"
-                    RepeatBehavior="Forever">
-            <DoubleAnimation Duration="0:0:1"
-                             Storyboard.TargetName="RefreshIcon"
-                             Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)"
-                             To="360" />
-        </Storyboard>
-    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -25,32 +14,20 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid x:Name="TitleBar"
-              Grid.Row="0"
-              Background="Teal">
+        <Grid x:Name="TitleBar" Grid.Row="0" Background="Teal">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Style="{StaticResource Title}">Tasks</TextBlock>
-            <StackPanel x:Name="TitleBarIcons"
-                        Grid.Column="1"
-                        Orientation="Horizontal">
-                <SymbolIcon x:Name="LogoutIcon"
-                            Style="{StaticResource TitleIcon}"
-                            Symbol="HangUp"
-                            Tapped="HangUp_Click" />
+            <StackPanel x:Name="TitleBarIcons" Grid.Column="1" Orientation="Horizontal">
+                <custom:ClickableIcon x:Name="LogoutIcon" Foreground="Azure" Margin="8,4" Icon="HangUp" Click="HangUp_Click" />
             </StackPanel>
         </Grid>
 
-        <ScrollViewer Grid.Row="1"
-                      HorizontalScrollBarVisibility="Hidden"
-                      VerticalScrollBarVisibility="Auto">
-            <ListView x:Name="TaskListView"
-                      Margin="5,5,0,0"
-                      IsItemClickEnabled="False"
-                      SelectionMode="None">
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+            <ListView x:Name="TaskListView" Margin="5,5,0,0" IsItemClickEnabled="False" SelectionMode="None">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -78,11 +55,7 @@
                                      Style="{StaticResource TaskBox}"
                                      Text="{Binding Text, Mode=TwoWay}" />
                             <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                 <SymbolIcon x:Name="taskDelete"
-                                            Grid.Column="2"
-                                            Foreground="Red"
-                                            Symbol="Delete"
-                                            Tapped="taskDelete_Tapped" />
+                                 <custom:ClickableIcon x:Name="DeleteTask" Grid.Column="2" Foreground="Red" Icon="Delete" Click="DeleteTask_Click" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
@@ -90,35 +63,17 @@
             </ListView>
         </ScrollViewer>
 
-        <Grid x:Name="AppBar"
-              Grid.Row="2"
-              Background="Teal"
-              Padding="8,4">
+        <Grid x:Name="AppBar" Grid.Row="2" Background="Teal" Padding="8,4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel x:Name="AppBarLeftIcons"
-                        Grid.Column="0"
-                        Orientation="Horizontal">
-                <SymbolIcon x:Name="AddTask"
-                            Style="{StaticResource TitleIcon}"
-                            Symbol="Add"
-                            Tapped="AddTaskIcon_Click" />
+            <StackPanel x:Name="AppBarLeftIcons" Grid.Column="0" Orientation="Horizontal">
+                <custom:ClickableIcon x:Name="AddTask" Foreground="Azure" Margin="8,4" Icon="Add" Click="AddTask_Click" />
             </StackPanel>
-            <StackPanel x:Name="AppBarRightIcons"
-                        Grid.Column="1"
-                        Orientation="Horizontal">
-                <SymbolIcon x:Name="RefreshIcon"
-                            RenderTransformOrigin="0.5,0.5"
-                            Style="{StaticResource TitleIcon}"
-                            Symbol="Sync"
-                            Tapped="RefreshIcon_Click">
-                    <SymbolIcon.RenderTransform>
-                        <CompositeTransform />
-                    </SymbolIcon.RenderTransform>
-                </SymbolIcon>
+            <StackPanel x:Name="AppBarRightIcons" Grid.Column="1" Orientation="Horizontal">
+                <custom:RotatingIcon x:Name="RefreshIcon" Icon="Sync" Foreground="Azure" Margin="8,4" Click="RefreshIcon_Click"/>
             </StackPanel>
 
 

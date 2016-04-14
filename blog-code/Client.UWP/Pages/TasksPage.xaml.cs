@@ -1,13 +1,11 @@
-﻿using Client.UWP.Models;
+﻿using Client.UWP.Controls;
+using Client.UWP.Models;
 using Client.UWP.Services;
 using System;
 using System.Threading.Tasks;
-using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 
@@ -27,20 +25,15 @@ namespace Client.UWP.Pages
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            StartNetworkActivity();
+            RefreshIcon.IsEnabled = false;
             TaskListView.ItemsSource = await dataTable.RefreshAsync();
-            StopNetworkActivity();
+            RefreshIcon.IsEnabled = true;
         }
 
         #region HangUp Clicked Event Handler
-        private async void HangUp_Click(object sender, TappedRoutedEventArgs e)
+        private async void HangUp_Click(object sender, RoutedEventArgs e)
         {
-            if (!LogoutIcon.IsTapEnabled) return;
-
-            var color = LogoutIcon.Foreground;
-            LogoutIcon.Foreground = new SolidColorBrush(Colors.Gray);
-            LogoutIcon.IsTapEnabled = false;
-
+            LogoutIcon.IsEnabled = false;
             try
             {
                 await AzureCloudProvider.Instance.LogoutAsync();
@@ -51,29 +44,21 @@ namespace Client.UWP.Pages
                 var dialog = new MessageDialog(exception.Message, "Logout Failed");
                 await dialog.ShowAsync();
             }
-
-            LogoutIcon.Foreground = color;
-            LogoutIcon.IsTapEnabled = true;
+            LogoutIcon.IsEnabled = true;
         }
 
         private async void RefreshIcon_Click(object sender, RoutedEventArgs e)
         {
-            if (!RefreshIcon.IsTapEnabled) return;
-
-            StartNetworkActivity();
+            RefreshIcon.IsEnabled = false;
             TaskListView.ItemsSource = await dataTable.RefreshAsync();
-            StopNetworkActivity();
+            RefreshIcon.IsEnabled = true;
         }
         #endregion
 
         #region Add Task Event Handler
-        private async void AddTaskIcon_Click(object sender, TappedRoutedEventArgs e)
+        private async void AddTask_Click(object sender, RoutedEventArgs e)
         {
-            if (!AddTask.IsTapEnabled) return;
-
-            var color = AddTask.Foreground;
-            AddTask.Foreground = new SolidColorBrush(Colors.Gray);
-            AddTask.IsTapEnabled = false;
+            AddTask.IsEnabled = false;
 
             var taskBox = new TextBox
             {
@@ -97,7 +82,7 @@ namespace Client.UWP.Pages
             if (result == ContentDialogResult.Primary)
             {
                 var newTask = new TodoItem { Text = taskBox.Text.Trim() };
-                StartNetworkActivity();
+                RefreshIcon.IsEnabled = false;
                 try
                 {
                     await dataTable.SaveAsync(newTask);
@@ -106,11 +91,10 @@ namespace Client.UWP.Pages
                 {
                     await ShowDialog("Save Failed", exception.Message);
                 }
-                StopNetworkActivity();
+                RefreshIcon.IsEnabled = true;
             }
 
-            AddTask.Foreground = color;
-            AddTask.IsTapEnabled = true;
+            AddTask.IsEnabled = true;
         }
         #endregion
 
@@ -120,14 +104,13 @@ namespace Client.UWP.Pages
             CheckBox cb = (CheckBox)sender;
             TodoItem item = cb.DataContext as TodoItem;
 
-            if (item.Completed == (bool)cb.IsChecked)
+            if (item.Completed == cb.IsChecked)
             {
                 return;
             }
-
             item.Completed = (bool)cb.IsChecked;
 
-            StartNetworkActivity();
+            RefreshIcon.IsEnabled = false;
             try
             {
                 await dataTable.SaveAsync(item);
@@ -136,7 +119,7 @@ namespace Client.UWP.Pages
             {
                 await ShowDialog("Save Failed", exception.Message);
             }
-            StopNetworkActivity();
+            RefreshIcon.IsEnabled = true;
             TaskListView.Focus(FocusState.Unfocused);
         }
 
@@ -147,7 +130,7 @@ namespace Client.UWP.Pages
             if (item == null || item.Text.Equals(taskTitle.Text.Trim())) return;
 
             item.Text = taskTitle.Text.Trim();
-            StartNetworkActivity();
+            RefreshIcon.IsEnabled = false;
             try
             {
                 await dataTable.SaveAsync(item);
@@ -156,16 +139,18 @@ namespace Client.UWP.Pages
             {
                 await ShowDialog("Save Failed", exception.Message);
             }
-            StopNetworkActivity();
+            RefreshIcon.IsEnabled = true;
             TaskListView.Focus(FocusState.Unfocused);
         }
+        #endregion
 
-        private async void taskDelete_Tapped(object sender, TappedRoutedEventArgs e)
+        #region Delete Task Event Handler
+        private async void DeleteTask_Click(object sender, RoutedEventArgs e)
         {
-            SymbolIcon icon = (SymbolIcon)sender;
+            ClickableIcon icon = (ClickableIcon)sender;
             TodoItem item = icon.DataContext as TodoItem;
 
-            StartNetworkActivity();
+            RefreshIcon.IsEnabled = false;
             try
             {
                 await dataTable.DeleteAsync(item);
@@ -174,7 +159,7 @@ namespace Client.UWP.Pages
             {
                 await ShowDialog("Delete Failed", exception.Message);
             }
-            StopNetworkActivity();
+            RefreshIcon.IsEnabled = true;
         }
         #endregion
 
@@ -189,26 +174,6 @@ namespace Client.UWP.Pages
         {
             var dialog = new MessageDialog(message, title);
             await dialog.ShowAsync();
-        }
-        #endregion
-
-        #region Network Activity Indicators
-        /// <summary>
-        /// Start rotating the refresh icon
-        /// </summary>
-        private void StartNetworkActivity()
-        {
-            RefreshIconRotation.Begin();
-            RefreshIcon.IsTapEnabled = false;
-        }
-
-        /// <summary>
-        /// Stop rotating the refresh icon
-        /// </summary>
-        private void StopNetworkActivity()
-        {
-            RefreshIcon.IsTapEnabled = true;
-            RefreshIconRotation.Stop();
         }
         #endregion
     }
