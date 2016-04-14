@@ -22,7 +22,9 @@
 
             <TextBlock Grid.Column="0" Style="{StaticResource Title}">Tasks</TextBlock>
             <StackPanel x:Name="TitleBarIcons" Grid.Column="1" Orientation="Horizontal">
-                <custom:ClickableIcon x:Name="LogoutIcon" Foreground="Azure" Margin="8,4" Icon="HangUp" Click="HangUp_Click" />
+                <Button x:Name="LogoutIcon" Background="Transparent" BorderThickness="0" Click="HangUp_Click">
+                    <SymbolIcon Symbol="HangUp" Foreground="Azure"/>
+                </Button>
             </StackPanel>
         </Grid>
 
@@ -55,7 +57,9 @@
                                      Style="{StaticResource TaskBox}"
                                      Text="{Binding Text, Mode=TwoWay}" />
                             <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                 <custom:ClickableIcon x:Name="DeleteTask" Grid.Column="2" Foreground="Red" Icon="Delete" Click="DeleteTask_Click" />
+                                <Button Grid.Column="2" Background="Transparent" BorderThickness="0" Click="DeleteTask_Click">
+                                    <SymbolIcon Symbol="Delete" Foreground="Red"/>
+                                </Button>
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
@@ -70,7 +74,9 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel x:Name="AppBarLeftIcons" Grid.Column="0" Orientation="Horizontal">
-                <custom:ClickableIcon x:Name="AddTask" Foreground="Azure" Margin="8,4" Icon="Add" Click="AddTask_Click" />
+                <Button x:Name="AddTask" Background="Transparent" BorderThickness="0" Click="AddTask_Click">
+                    <SymbolIcon Symbol="Add" Foreground="Azure"/>
+                </Button>
             </StackPanel>
             <StackPanel x:Name="AppBarRightIcons" Grid.Column="1" Orientation="Horizontal">
                 <custom:RotatingIcon x:Name="RefreshIcon" Icon="Sync" Foreground="Azure" Margin="8,4" Click="RefreshIcon_Click"/>

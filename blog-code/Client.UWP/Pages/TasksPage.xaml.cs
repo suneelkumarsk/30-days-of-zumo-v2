@@ -147,8 +147,7 @@ namespace Client.UWP.Pages
         #region Delete Task Event Handler
         private async void DeleteTask_Click(object sender, RoutedEventArgs e)
         {
-            ClickableIcon icon = (ClickableIcon)sender;
-            TodoItem item = icon.DataContext as TodoItem;
+            TodoItem item = ((FrameworkElement)sender).DataContext as TodoItem;
 
             RefreshIcon.IsEnabled = false;
             try

@@ -95,9 +95,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ClickableIcon.xaml.cs">
-      <DependentUpon>ClickableIcon.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\RotatingIcon.xaml.cs">
       <DependentUpon>RotatingIcon.xaml</DependentUpon>
     </Compile>
@@ -138,10 +135,6 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\ClickableIcon.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\RotatingIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
