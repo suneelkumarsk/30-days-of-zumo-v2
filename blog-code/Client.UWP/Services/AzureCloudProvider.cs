@@ -36,13 +36,7 @@ namespace Client.UWP.Services
             Debug.WriteLine($"[AzureCloudProvider#constructor] Initializing connection to {clientUri}");
             this.client = new MobileServiceClient(clientUri);
 
-            #region Define the Offline Sync Store
-            var store = new MobileServiceSQLiteStore("localstore.db");
-            store.DefineTable<TodoItem>();
-            Debug.WriteLine($"[AzureCloudProvider#constructor] Initializing store");
-            client.SyncContext.InitializeAsync(store).Wait();   // Wait for the app to be initialized.
-            Debug.WriteLine($"[AzureCloudProvider#constructor] Finished initializing store");
-            #endregion
+
 
             Debug.WriteLine($"[AzureCloudProvider#constructor] Initialiation Complete");
         }
@@ -85,6 +79,17 @@ namespace Client.UWP.Services
             {
                 throw new CloudAuthenticationFailedException(exception.Message, exception);
             }
+        }
+
+        /// <summary>
+        /// Initialize the Offline Sync Store
+        /// </summary>
+        /// <returns>async task</returns>
+        public async Task InitializeOfflineSync()
+        {
+            var store = new MobileServiceSQLiteStore("localstore.db");
+            store.DefineTable<TodoItem>();
+            await client.SyncContext.InitializeAsync(store);
         }
 
         /// <summary>
