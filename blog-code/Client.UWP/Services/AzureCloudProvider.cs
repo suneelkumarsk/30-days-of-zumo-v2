@@ -1,4 +1,6 @@
-﻿using Microsoft.WindowsAzure.MobileServices;
+﻿using Client.UWP.Models;
+using Microsoft.WindowsAzure.MobileServices;
+using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -33,6 +35,14 @@ namespace Client.UWP.Services
 
             Debug.WriteLine($"[AzureCloudProvider#constructor] Initializing connection to {clientUri}");
             this.client = new MobileServiceClient(clientUri);
+
+            #region Define the Offline Sync Store
+            var store = new MobileServiceSQLiteStore("localstore.db");
+            store.DefineTable<TodoItem>();
+            Debug.WriteLine($"[AzureCloudProvider#constructor] Initializing store");
+            client.SyncContext.InitializeAsync(store).Wait();   // Wait for the app to be initialized.
+            Debug.WriteLine($"[AzureCloudProvider#constructor] Finished initializing store");
+            #endregion
 
             Debug.WriteLine($"[AzureCloudProvider#constructor] Initialiation Complete");
         }
@@ -84,7 +94,7 @@ namespace Client.UWP.Services
         /// <returns>An AzureDataTable reference</returns>
         public AzureDataTable<T> GetTable<T>() where T:EntityData
         {
-            return new AzureDataTable<T>(client.GetTable<T>());
+            return new AzureDataTable<T>(client);
         }
 
     }

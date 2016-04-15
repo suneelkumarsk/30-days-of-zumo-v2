@@ -9,12 +9,14 @@ namespace Client.UWP.Services
 {
     public class AzureDataTable<T> where T: EntityData
     {
+        private IMobileServiceClient client;
         private IMobileServiceTable<T> dataTable;
         private ObservableCollection<T> dataView;
 
-        public AzureDataTable(IMobileServiceTable<T> table)
+        public AzureDataTable(IMobileServiceClient client)
         {
-            this.dataTable = table;
+            this.client = client;
+            this.dataTable = client.GetTable<T>();
         }
 
         public async Task SaveAsync(T item)
