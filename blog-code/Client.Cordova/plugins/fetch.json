@@ -1,0 +1,10 @@
+{
+    "cordova-plugin-ms-azure-mobile-apps": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-ms-azure-mobile-apps"
+        },
+        "is_top_level": true,
+        "variables": {}
+    }
+}

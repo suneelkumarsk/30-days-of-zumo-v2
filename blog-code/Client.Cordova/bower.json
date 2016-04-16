@@ -1,0 +1,6 @@
+{
+  "name": "Client.Cordova",
+  "dependencies": {
+    "jquery": "2.1.4"
+  }
+}

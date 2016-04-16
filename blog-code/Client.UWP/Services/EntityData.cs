@@ -23,9 +23,6 @@ namespace Client.UWP.Services
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool Equals(EntityData item)
-        {
-            return item.Id == Id;
-        }
+        public bool Equals(EntityData item) => item.Id == Id;
     }
 }

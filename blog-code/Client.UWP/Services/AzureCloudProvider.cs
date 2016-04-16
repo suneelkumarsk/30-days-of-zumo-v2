@@ -18,10 +18,7 @@ namespace Client.UWP.Services
         /// <summary>
         /// Property for getting the current cloud provider
         /// </summary>
-        public static AzureCloudProvider Instance
-        {
-            get { return instance; }
-        }
+        public static AzureCloudProvider Instance => instance;
         #endregion
 
         private IMobileServiceClient client;
@@ -44,10 +41,7 @@ namespace Client.UWP.Services
         /// <summary>
         /// Property: Returns the current client
         /// </summary>
-        public IMobileServiceClient Client
-        {
-            get { return client; }
-        }
+        public IMobileServiceClient Client => client;
 
         /// <summary>
         /// Login to the cloud resource
@@ -100,20 +94,14 @@ namespace Client.UWP.Services
         /// </summary>
         /// <typeparam name="T">The model in the table</typeparam>
         /// <returns>An AzureDataTable reference</returns>
-        public AzureDataTable<T> GetTable<T>() where T:EntityData
-        {
-            return new AzureDataTable<T>(this);
-        }
+        public AzureDataTable<T> GetTable<T>() where T : EntityData => new AzureDataTable<T>(this);
 
         /// <summary>
         /// Determines if the table name is a sync tables
         /// </summary>
         /// <param name="className">The name of the table</param>
         /// <returns>boolean</returns>
-        public bool IsSyncTable(string className)
-        {
-            return syncTables.Contains(className);
-        }
+        public bool IsSyncTable(string className) => syncTables.Contains(className);
 
     }
 }
