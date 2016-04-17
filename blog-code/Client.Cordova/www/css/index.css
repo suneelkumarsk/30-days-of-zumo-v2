@@ -25,7 +25,9 @@ body {
     margin: 0;
     padding: 0;
     width: 100%;
-}
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;}
 
 #loginButtonWrapper {
     position: fixed;
@@ -36,7 +38,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-}
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;}
 
 #loginButton {
     background: #3498db;
@@ -52,7 +56,9 @@ body {
     font-size: 20px;
     padding: 10px 20px 10px 20px;
     text-decoration: none;
-}
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;}
 
     #loginButton:hover {
         background: #3cb0fd;
@@ -61,6 +67,9 @@ body {
         background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
         background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
         text-decoration: none;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
     }
 
 button {
@@ -68,10 +77,14 @@ button {
     color: #555;
     background-color: #F4F4FA;
     padding: 0 10px;
+        -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
     button:hover {
         background-color: white;
+
     }
 
 input[type=text], input:not([type]) {
@@ -79,6 +92,9 @@ input[type=text], input:not([type]) {
     -ms-text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
+        -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 /* Main page structure and masthead style */
