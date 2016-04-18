@@ -24,11 +24,10 @@ namespace backend.dotnet.Controllers
         }
 
         // GET tables/TodoItem
-        public IQueryable<TodoItem> GetAllTodoItem()
+        public async Task<IQueryable<TodoItem>> GetAllTodoItem()
         {
             Debug.WriteLine("GET tables/TodoItem");
-            var emailAddr = GetEmailAddress();
-            Debug.WriteLine($"email address = {emailAddr}");
+            var emailAddr = await GetEmailAddress();
             return Query();
         }
 
@@ -71,12 +70,10 @@ namespace backend.dotnet.Controllers
         private async Task<string> GetEmailAddress()
         {
             var credentials = await User.GetAppServiceIdentityAsync<AzureActiveDirectoryCredentials>(Request);
-            Debug.WriteLine("Obtained Credentials");
-            foreach (var claim in credentials.UserClaims)
-            {
-                Debug.WriteLine($"Claim: k={claim.Type} v={claim.Value}");
-            }
-            return GetAzureSID();
+            return credentials.UserClaims
+                .Where(claim => claim.Type.EndsWith("/emailaddress"))
+                .First<Claim>()
+                .Value;
         }
     }
 }

@@ -247,3 +247,4 @@ ModelManifest.xml
 # Node Modules
 node_modules/
 bower_components/
+*.pubxml
