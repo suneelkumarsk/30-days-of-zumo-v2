@@ -1,6 +1,9 @@
 ﻿using Owin;
+using System.Configuration;
 using System.Data.Entity;
 using System.Web.Http;
+using Microsoft.Azure.Mobile.Server;
+using Microsoft.Azure.Mobile.Server.Authentication;
 using Microsoft.Azure.Mobile.Server.Config;
 using Microsoft.Azure.Mobile.Server.Tables.Config;
 using backend.dotnet.Models;
@@ -25,6 +28,17 @@ namespace backend.dotnet
             // Initialize the database with EF Code First
             Database.SetInitializer(new AzureMobileInitializer());
 
+            MobileAppSettingsDictionary settings = config.GetMobileAppSettingsProvider().GetMobileAppSettings();
+            if (string.IsNullOrEmpty(settings.HostName))
+            {
+                app.UseAppServiceAuthentication(new AppServiceAuthenticationOptions
+                {
+                    SigningKey = ConfigurationManager.AppSettings["SigningKey"],
+                    ValidAudiences = new[] { ConfigurationManager.AppSettings["ValidAudience"] },
+                    ValidIssuers = new[] { ConfigurationManager.AppSettings["ValidIssuer"] },
+                    TokenHandler = config.GetAppServiceTokenHandler()
+                });
+            }
             // Link the Web API into the configuration
             app.UseWebApi(config);
         }

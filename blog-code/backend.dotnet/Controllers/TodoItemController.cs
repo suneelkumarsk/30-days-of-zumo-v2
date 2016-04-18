@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -6,10 +7,13 @@ using System.Web.Http.OData;
 using Microsoft.Azure.Mobile.Server;
 using backend.dotnet.DataObjects;
 using backend.dotnet.Models;
-using System.Diagnostics;
+using System.Security.Claims;
+using System.Security.Principal;
+using Microsoft.Azure.Mobile.Server.Authentication;
 
 namespace backend.dotnet.Controllers
 {
+    [Authorize]
     public class TodoItemController : TableController<TodoItem>
     {
         protected override void Initialize(HttpControllerContext controllerContext)
@@ -23,6 +27,8 @@ namespace backend.dotnet.Controllers
         public IQueryable<TodoItem> GetAllTodoItem()
         {
             Debug.WriteLine("GET tables/TodoItem");
+            var emailAddr = GetEmailAddress();
+            Debug.WriteLine($"email address = {emailAddr}");
             return Query();
         }
 
@@ -53,6 +59,24 @@ namespace backend.dotnet.Controllers
         {
             Debug.WriteLine($"DELETE tables/TodoItem/{id}");
             return DeleteAsync(id);
+        }
+
+        private string GetAzureSID()
+        {
+            var principal = this.User as ClaimsPrincipal;
+            var sid = principal.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return sid;
+        }
+
+        private async Task<string> GetEmailAddress()
+        {
+            var credentials = await User.GetAppServiceIdentityAsync<AzureActiveDirectoryCredentials>(Request);
+            Debug.WriteLine("Obtained Credentials");
+            foreach (var claim in credentials.UserClaims)
+            {
+                Debug.WriteLine($"Claim: k={claim.Type} v={claim.Value}");
+            }
+            return GetAzureSID();
         }
     }
 }
