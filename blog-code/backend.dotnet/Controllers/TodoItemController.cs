@@ -28,7 +28,7 @@ namespace backend.dotnet.Controllers
         {
             Debug.WriteLine("GET tables/TodoItem");
             var emailAddr = await GetEmailAddress();
-            return Query();
+            return Query().Where(item => item.UserId == emailAddr);
         }
 
         // GET tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
@@ -48,7 +48,9 @@ namespace backend.dotnet.Controllers
         // POST tables/TodoItem
         public async Task<IHttpActionResult> PostTodoItem(TodoItem item)
         {
-            Debug.WriteLine($"PATCH tables/TodoItem");
+            Debug.WriteLine($"POST tables/TodoItem");
+            var emailAddr = await GetEmailAddress();
+            item.UserId = emailAddr;
             TodoItem current = await InsertAsync(item);
             return CreatedAtRoute("Tables", new { id = current.Id }, current);
         }
