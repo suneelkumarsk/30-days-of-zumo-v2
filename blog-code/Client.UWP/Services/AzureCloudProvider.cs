@@ -29,13 +29,13 @@ namespace Client.UWP.Services
         /// </summary>
         private AzureCloudProvider()
         {
-            var appID = "shell-4ca00908-6291-4333-8894-0ffd5291b110";
+            var appID = "shellmonger-demo";
             var clientUri = $"https://{appID}.azurewebsites.net";
 
             Debug.WriteLine($"[AzureCloudProvider#constructor] Initializing connection to {clientUri}");
             this.client = new MobileServiceClient(clientUri);
 
-            Debug.WriteLine($"[AzureCloudProvider#constructor] Initialiation Complete");
+            Debug.WriteLine($"[AzureCloudProvider#constructor] Initialization Complete");
         }
 
         /// <summary>

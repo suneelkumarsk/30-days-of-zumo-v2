@@ -12,7 +12,7 @@
      * @event
      */
     function onDeviceReady() {
-        client = new WindowsAzure.MobileServiceClient('https://shell-4ca00908-6291-4333-8894-0ffd5291b110.azurewebsites.net');
+        client = new WindowsAzure.MobileServiceClient('https://shellmonger-demo.azurewebsites.net');
         dataTable = client.getTable('TodoItem');
 
         $('#loginButton').on('click', function (event) {
