@@ -34,42 +34,29 @@ namespace backend.dotnet.Controllers
         }
 
         // GET tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        public async Task<IHttpActionResult> GetTodoItem(string id)
+        public async Task<SingleResult<TodoItem>> GetTodoItem(string id)
         {
             Debug.WriteLine($"GET tables/TodoItem/{id}");
-            var result = Lookup(id);
-            var item = result.Queryable.FirstOrDefault<TodoItem>();
-            if (item == null)
-            {
-                return NotFound();
-            }
-
             var emailAddr = await GetEmailAddress();
-            if (item.UserId != emailAddr)
-            {
-                return (IHttpActionResult)(new HttpResponseMessage(HttpStatusCode.Forbidden));
-            }
-
-            return Json(item);
+            var query = Lookup(id).Queryable.Where(item => item.UserId == emailAddr);
+            return new SingleResult<TodoItem>(query);
         }
 
         // PATCH tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        public async Task<IHttpActionResult> PatchTodoItem(string id, Delta<TodoItem> patch)
+        public async Task<TodoItem> PatchTodoItem(string id, Delta<TodoItem> patch)
         {
             Debug.WriteLine($"PATCH tables/TodoItem/{id}");
             var item = Lookup(id).Queryable.FirstOrDefault<TodoItem>();
             if (item == null)
             {
-                return NotFound();
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-
             var emailAddr = await GetEmailAddress();
             if (item.UserId != emailAddr)
             {
-                return (IHttpActionResult)(new HttpResponseMessage(HttpStatusCode.Forbidden));
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
             }
-
-            return (IHttpActionResult)UpdateAsync(id, patch);
+            return await UpdateAsync(id, patch);
         }
 
         // POST tables/TodoItem
@@ -83,21 +70,20 @@ namespace backend.dotnet.Controllers
         }
 
         // DELETE tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        public async Task<IHttpActionResult> DeleteTodoItem(string id)
+        public async Task DeleteTodoItem(string id)
         {
             Debug.WriteLine($"DELETE tables/TodoItem/{id}");
             var item = Lookup(id).Queryable.FirstOrDefault<TodoItem>();
             if (item == null)
             {
-                return NotFound();
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-
             var emailAddr = await GetEmailAddress();
             if (item.UserId != emailAddr)
             {
-                return (IHttpActionResult)(new HttpResponseMessage(HttpStatusCode.Forbidden));
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
             }
-            return (IHttpActionResult)DeleteAsync(id);
+            await DeleteAsync(id);
         }
 
         private string GetAzureSID()
