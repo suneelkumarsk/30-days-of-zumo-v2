@@ -10,6 +10,8 @@ using backend.dotnet.Models;
 using System.Security.Claims;
 using System.Security.Principal;
 using Microsoft.Azure.Mobile.Server.Authentication;
+using System.Net.Http;
+using System.Net;
 
 namespace backend.dotnet.Controllers
 {
@@ -32,17 +34,42 @@ namespace backend.dotnet.Controllers
         }
 
         // GET tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        public SingleResult<TodoItem> GetTodoItem(string id)
+        public async Task<IHttpActionResult> GetTodoItem(string id)
         {
             Debug.WriteLine($"GET tables/TodoItem/{id}");
-            return Lookup(id);
+            var result = Lookup(id);
+            var item = result.Queryable.FirstOrDefault<TodoItem>();
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            var emailAddr = await GetEmailAddress();
+            if (item.UserId != emailAddr)
+            {
+                return (IHttpActionResult)(new HttpResponseMessage(HttpStatusCode.Forbidden));
+            }
+
+            return Json(item);
         }
 
         // PATCH tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        public Task<TodoItem> PatchTodoItem(string id, Delta<TodoItem> patch)
+        public async Task<IHttpActionResult> PatchTodoItem(string id, Delta<TodoItem> patch)
         {
             Debug.WriteLine($"PATCH tables/TodoItem/{id}");
-            return UpdateAsync(id, patch);
+            var item = Lookup(id).Queryable.FirstOrDefault<TodoItem>();
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            var emailAddr = await GetEmailAddress();
+            if (item.UserId != emailAddr)
+            {
+                return (IHttpActionResult)(new HttpResponseMessage(HttpStatusCode.Forbidden));
+            }
+
+            return (IHttpActionResult)UpdateAsync(id, patch);
         }
 
         // POST tables/TodoItem
@@ -56,10 +83,21 @@ namespace backend.dotnet.Controllers
         }
 
         // DELETE tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        public Task DeleteTodoItem(string id)
+        public async Task<IHttpActionResult> DeleteTodoItem(string id)
         {
             Debug.WriteLine($"DELETE tables/TodoItem/{id}");
-            return DeleteAsync(id);
+            var item = Lookup(id).Queryable.FirstOrDefault<TodoItem>();
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            var emailAddr = await GetEmailAddress();
+            if (item.UserId != emailAddr)
+            {
+                return (IHttpActionResult)(new HttpResponseMessage(HttpStatusCode.Forbidden));
+            }
+            return (IHttpActionResult)DeleteAsync(id);
         }
 
         private string GetAzureSID()
