@@ -22,7 +22,7 @@ namespace backend.dotnet.Controllers
         {
             base.Initialize(controllerContext);
             MyDbContext context = new MyDbContext();
-            DomainManager = new EntityDomainManager<TodoItem>(context, Request);
+            DomainManager = new EntityDomainManager<TodoItem>(context, Request, enableSoftDelete: true);
         }
 
         // GET tables/TodoItem
