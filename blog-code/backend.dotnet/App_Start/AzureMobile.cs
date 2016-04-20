@@ -26,7 +26,8 @@ namespace backend.dotnet
                 .ApplyTo(config);
 
             // Initialize the database with EF Code First
-            Database.SetInitializer(new AzureMobileInitializer());
+            //Database.SetInitializer(new AzureMobileInitializer());
+            Database.SetInitializer<MyDbContext>(null);
 
             MobileAppSettingsDictionary settings = config.GetMobileAppSettingsProvider().GetMobileAppSettings();
             if (string.IsNullOrEmpty(settings.HostName))
