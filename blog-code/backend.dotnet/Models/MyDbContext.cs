@@ -12,15 +12,18 @@ namespace backend.dotnet.Models
 
         public MyDbContext() : base(connectionStringName)
         {
-            this.Database.Log = System.Console.Write;
+            this.Database.Log = this.Write;
+        }
+
+        public void Write(object m)
+        {
+            System.Diagnostics.Debug.Write(m);
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //modelBuilder.HasDefaultSchema("mobile");
-            modelBuilder.Entity<TodoItem>().ToTable("TodoItem", "mobile");
             modelBuilder.Conventions.Add(
                 new AttributeToColumnAnnotationConvention<TableColumnAttribute, string>(
                     "ServiceTableColumn",

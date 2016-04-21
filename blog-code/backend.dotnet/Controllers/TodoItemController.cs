@@ -1,17 +1,16 @@
 ﻿using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.OData;
 using Microsoft.Azure.Mobile.Server;
+using Microsoft.Azure.Mobile.Server.Authentication;
 using backend.dotnet.DataObjects;
 using backend.dotnet.Models;
-using System.Security.Claims;
-using System.Security.Principal;
-using Microsoft.Azure.Mobile.Server.Authentication;
-using System.Net.Http;
-using System.Net;
 
 namespace backend.dotnet.Controllers
 {
@@ -30,6 +29,7 @@ namespace backend.dotnet.Controllers
         {
             Debug.WriteLine("GET tables/TodoItem");
             var emailAddr = await GetEmailAddress();
+            Debug.WriteLine($"Email Address = {emailAddr}");
             return Query().Where(item => item.UserId == emailAddr);
         }
 
@@ -64,9 +64,23 @@ namespace backend.dotnet.Controllers
         {
             Debug.WriteLine($"POST tables/TodoItem");
             var emailAddr = await GetEmailAddress();
+            Debug.WriteLine($"Email Address = {emailAddr}");
             item.UserId = emailAddr;
-            TodoItem current = await InsertAsync(item);
-            return CreatedAtRoute("Tables", new { id = current.Id }, current);
+            Debug.WriteLine($"Item = {item}");
+            try
+            {
+                TodoItem current = await InsertAsync(item);
+                Debug.WriteLine($"Updated Item = {current}");
+                return CreatedAtRoute("Tables", new { id = current.Id }, current);
+            }
+            catch (HttpResponseException ex)
+            {
+                Debug.WriteLine($"Exception: {ex}");
+                Debug.WriteLine($"Response: {ex.Response}");
+                string content = await ex.Response.Content.ReadAsStringAsync();
+                Debug.WriteLine($"Response Content: {content}");
+                throw ex;
+            }
         }
 
         // DELETE tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959

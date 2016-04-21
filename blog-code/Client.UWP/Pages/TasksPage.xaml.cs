@@ -81,7 +81,7 @@ namespace Client.UWP.Pages
             var result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {
-                var newTask = new TodoItem { Text = taskBox.Text.Trim() };
+                var newTask = new TodoItem { Title = taskBox.Text.Trim() };
                 RefreshIcon.IsEnabled = false;
                 try
                 {
@@ -104,11 +104,11 @@ namespace Client.UWP.Pages
             CheckBox cb = (CheckBox)sender;
             TodoItem item = cb.DataContext as TodoItem;
 
-            if (item.Completed == cb.IsChecked)
+            if (item.Complete == cb.IsChecked)
             {
                 return;
             }
-            item.Completed = (bool)cb.IsChecked;
+            item.Complete = (bool)cb.IsChecked;
 
             RefreshIcon.IsEnabled = false;
             try
@@ -127,9 +127,9 @@ namespace Client.UWP.Pages
         {
             TextBox taskTitle = (TextBox)sender;
             TodoItem item = taskTitle.DataContext as TodoItem;
-            if (item == null || item.Text.Equals(taskTitle.Text.Trim())) return;
+            if (item == null || item.Title.Equals(taskTitle.Text.Trim())) return;
 
-            item.Text = taskTitle.Text.Trim();
+            item.Title = taskTitle.Text.Trim();
             RefreshIcon.IsEnabled = false;
             try
             {

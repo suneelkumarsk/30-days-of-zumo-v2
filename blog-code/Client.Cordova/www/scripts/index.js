@@ -103,7 +103,7 @@
             .attr('data-todoitem-id', item.id)
             .append($('<button class="item-delete">Delete</button>'))
             .append($('<input type="checkbox" class="item-complete">').prop('checked', item.complete))
-            .append($('<div>').append($('<input class="item-text">').val(item.text)));
+            .append($('<div>').append($('<input class="item-text">').val(item.title)));
     }
 
     /**
@@ -192,8 +192,8 @@
             newText = $(event.currentTarget).val();
 
         console.info('[updateItemTextHandler] id = ' + id + ', newText = ' + newText);
-        updateSummaryMessage('Updating text field');
-        dataTable.update({ id: id, text: newText }).then(function (item) {
+        updateSummaryMessage('Updating title field');
+        dataTable.update({ id: id, title: newText }).then(function (item) {
             console.info('[updateItemTextHandler] item = ', item);
             updateSummaryMessage('Item is updated in Azure');
         }, handleError);

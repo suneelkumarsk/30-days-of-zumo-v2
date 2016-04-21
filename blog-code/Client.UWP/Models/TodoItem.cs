@@ -5,10 +5,8 @@ namespace Client.UWP.Models
 {
     class TodoItem : EntityData
     {
-        [JsonProperty(PropertyName = "text")]
-        public string Text { get; set; }
+        public string Title { get; set; }
 
-        [JsonProperty(PropertyName = "complete")]
-        public bool Completed { get; set; }
+        public bool Complete { get; set; }
     }
 }
