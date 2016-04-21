@@ -49,13 +49,13 @@
                                       Margin="10,5"
                                       VerticalAlignment="Center"
                                       Checked="taskComplete_Changed"
-                                      IsChecked="{Binding Completed, Mode=TwoWay}"
+                                      IsChecked="{Binding Complete, Mode=TwoWay}"
                                       Unchecked="taskComplete_Changed" />
                             <TextBox x:Name="taskTitle"
                                      Grid.Column="1"
                                      TextChanged="taskTitle_Changed"
                                      Style="{StaticResource TaskBox}"
-                                     Text="{Binding Text, Mode=TwoWay}" />
+                                     Text="{Binding Title, Mode=TwoWay}" />
                             <StackPanel Grid.Column="2" Orientation="Horizontal">
                                 <Button Grid.Column="2" Background="Transparent" BorderThickness="0" Click="DeleteTask_Click">
                                     <SymbolIcon Symbol="Delete" Foreground="Red"/>

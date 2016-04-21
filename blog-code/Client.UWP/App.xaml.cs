@@ -30,7 +30,7 @@ namespace Client.UWP
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -51,9 +51,7 @@ namespace Client.UWP
 
             // Initialize offline-sync and wait for it to complete
             Debug.WriteLine($"[App.xaml.cs#OnLaunched] Initializing offline sync");
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            AzureCloudProvider.Instance.InitializeOfflineSync();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            await AzureCloudProvider.Instance.InitializeOfflineSync();
             Debug.WriteLine($"[App.xaml.cs#OnLaunched] Finished initializing offline sync");
 
             if (e.PrelaunchActivated == false)

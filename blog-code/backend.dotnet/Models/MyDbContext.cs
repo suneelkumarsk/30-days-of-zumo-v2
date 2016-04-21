@@ -12,7 +12,12 @@ namespace backend.dotnet.Models
 
         public MyDbContext() : base(connectionStringName)
         {
+            this.Database.Log = this.Write;
+        }
 
+        public void Write(object m)
+        {
+            System.Diagnostics.Debug.Write(m);
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
