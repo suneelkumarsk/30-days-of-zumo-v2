@@ -1,7 +1,8 @@
 ﻿var express = require('express'),
     serveStatic = require('serve-static'),
     azureMobileApps = require('azure-mobile-apps'),
-    authMiddleware = require('./authMiddleware');
+    authMiddleware = require('./authMiddleware'),
+    customRouter = require('./customRouter');
 
 // Set up a standard Express app
 var webApp = express();
@@ -18,6 +19,8 @@ webApp.use(serveStatic('public'));
 // Initialize the Azure Mobile Apps, then start listening
 mobileApp.tables.initialize().then(function () {
     webApp.use(mobileApp);
+    webApp.use('/custom', customRouter);
+
     webApp.listen(process.env.PORT || 3000);
 });
 

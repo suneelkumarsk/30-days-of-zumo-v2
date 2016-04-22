@@ -12,8 +12,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>6b750221-bbcf-493a-ac8f-28829beebdc2</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>server.js</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -33,6 +32,7 @@
   <ItemGroup>
     <Compile Include="api\createKey.js" />
     <Compile Include="authMiddleware.js" />
+    <Compile Include="customRouter.js" />
     <Compile Include="lib\ShellmongerApp.js" />
     <Compile Include="server.js" />
     <Compile Include="tables\todoitem.js" />

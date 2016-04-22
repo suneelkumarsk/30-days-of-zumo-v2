@@ -53,4 +53,4 @@ function authMiddleware(request, response, next) {
     });
 }
 
-module.xports = authMiddleware;
+module.exports = authMiddleware;
