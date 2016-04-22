@@ -31,6 +31,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="api\createKey.js" />
     <Compile Include="authMiddleware.js" />
     <Compile Include="lib\ShellmongerApp.js" />
     <Compile Include="server.js" />
@@ -40,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib\" />
+    <Folder Include="api\" />
     <Folder Include="tables\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->

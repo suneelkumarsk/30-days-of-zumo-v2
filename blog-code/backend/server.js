@@ -10,6 +10,7 @@ var webApp = express();
 var mobileApp = azureMobileApps();
 mobileApp.use(authMiddleware);
 mobileApp.tables.import('./tables');
+mobileApp.api.import('./api');
 
 // Create the public app area
 webApp.use(serveStatic('public'));
