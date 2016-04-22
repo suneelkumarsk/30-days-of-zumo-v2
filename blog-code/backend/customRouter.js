@@ -8,7 +8,7 @@ router.get('/createKey', function (req, res, next) {
     var d = new Date();
     var now = d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + d.getUTCDate();
     console.info('NOW = ', now);
-    var installID = req.get('X-INSTALLATION-ID');
+    var installID = req.get('X-ZUMO-INSTALLATION-ID');
     console.info('INSTALLID = ', installID);
 
     if (typeof installID === 'undefined') {

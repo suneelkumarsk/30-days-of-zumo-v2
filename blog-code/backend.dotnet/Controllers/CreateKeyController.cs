@@ -20,7 +20,7 @@ namespace backend.dotnet.Controllers
         {
             var now = DateTime.UtcNow.ToString("yyyy-M-d");
             Debug.WriteLine($"NOW = {now}");
-            var installID = HttpContext.Current.Request.Headers["X-INSTALLATION-ID"];
+            var installID = HttpContext.Current.Request.Headers["X-ZUMO-INSTALLATION-ID"];
             if (installID == null)
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
