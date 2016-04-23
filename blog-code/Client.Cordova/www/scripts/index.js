@@ -2,7 +2,11 @@
     "use strict";
 
     var client,         // Connection to the Azure Mobile App backend
-        dataTable;      // Reference to the table endpoint on backend
+        origClient,     // We filter the client eventually - this is a copy of the original
+        dataTable,      // Reference to the table endpoint on backend
+        apiToken;       // The API Token received from the service
+
+    var azureBackend = 'https://shellmonger-demo.azurewebsites.net';
 
     document.addEventListener( 'deviceready', onDeviceReady.bind(this), false);
 
@@ -12,17 +16,45 @@
      * @event
      */
     function onDeviceReady() {
-        client = new WindowsAzure.MobileServiceClient('https://shellmonger-demo.azurewebsites.net');
-        dataTable = client.getTable('TodoItem');
+        console.info('Creating Connection to Backend ' + azureBackend);
+        client = new WindowsAzure.MobileServiceClient(azureBackend);
+        console.info('Calling /api/createKey');
+        client.invokeApi('createKey', { method: 'GET' }).then(createKeySuccess, createKeyFailure);
 
-        $('#loginButton').on('click', function (event) {
-            event.preventDefault();
+        function createKeySuccess(response) {
+            apiToken = response.result.jwt;
 
-            client.login('aad').then(initializeApp, function (error) {
-                console.error('Authentication Failed: ', error);
-                alert('Authentication Failed');
+            // Add a filter for every future request
+            origClient = client; // Keep a copy around of the old client
+            client = origClient.withFilter(addApplicationKeyHeader);
+
+            dataTable = client.getTable('TodoItem');
+            $('#loginButton').on('click', function (event) {
+                event.preventDefault();
+                client.login('aad').then(initializeApp, function (error) {
+                    console.error('Authentication Failed: ', error);
+                    alert('Authentication Failed');
+                });
             });
-        });
+        }
+
+        function createKeyFailure(error) {
+            console.error('/api/createKey returned Error: ', error);
+            alert('INVALID KEY RECEIVED');
+        }
+    }
+
+    /**
+     * Service Filter for adding header to the application
+     * @param {object} request the original request
+     * @param {function} next the next filter in the list
+     * @param {function} callback if not using promises, the callback
+     */
+    function addApplicationKeyHeader(request, next, callback) {
+        console.log('[addApplicationKeyHeader] request = ', request);
+        if (typeof apiToken === 'string' && apiToken.length > 1)
+            request.headers['X-LOCAL-APITOKEN'] = apiToken;
+        next(request, callback);
     }
 
     function initializeApp() {
