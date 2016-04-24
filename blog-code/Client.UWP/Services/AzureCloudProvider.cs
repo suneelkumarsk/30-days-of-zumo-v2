@@ -1,8 +1,11 @@
 ﻿using Client.UWP.Models;
 using Microsoft.WindowsAzure.MobileServices;
 using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Client.UWP.Services
@@ -33,7 +36,7 @@ namespace Client.UWP.Services
             var clientUri = $"https://{appID}.azurewebsites.net";
 
             Debug.WriteLine($"[AzureCloudProvider#constructor] Initializing connection to {clientUri}");
-            this.client = new MobileServiceClient(clientUri);
+            this.client = new MobileServiceClient(clientUri, new AddApiTokenDelegatingHandler()) ;
 
             Debug.WriteLine($"[AzureCloudProvider#constructor] Initialization Complete");
         }
@@ -44,6 +47,11 @@ namespace Client.UWP.Services
         public IMobileServiceClient Client => client;
 
         /// <summary>
+        /// The Api Token from /api/createKey
+        /// </summary>
+        public static string ApiToken { get; set; }
+
+        /// <summary>
         /// Login to the cloud resource
         /// </summary>
         /// <returns>async task</returns>
@@ -51,6 +59,8 @@ namespace Client.UWP.Services
         {
             try
             {
+                AzureCloudProvider.ApiToken = await GetApplicationToken();
+                Debug.WriteLine($"Response from API Token = {ApiToken}");
                 await client.LoginAsync("aad");
             }
             catch (MobileServiceInvalidOperationException exception)
@@ -103,5 +113,34 @@ namespace Client.UWP.Services
         /// <returns>boolean</returns>
         public bool IsSyncTable(string className) => syncTables.Contains(className);
 
+        public async Task<string> GetApplicationToken()
+        {
+            var response = await client.InvokeApiAsync<ApplicationKeyResponse>("createKey", HttpMethod.Get, null);
+            return response.Token;
+        }
+    }
+
+    class ApplicationKeyResponse
+    {
+        [JsonProperty(PropertyName = "jwt")]
+        public string Token { get; set; }
+    }
+
+    /// <summary>
+    /// A delegating handler for the requests
+    /// </summary>
+    public class AddApiTokenDelegatingHandler : DelegatingHandler
+    {
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            if (AzureCloudProvider.ApiToken != null)
+            {
+                // Change the request-side here based on the HttpRequestMessage
+                request.Headers.Add("X-LOCAL-APITOKEN", AzureCloudProvider.ApiToken);
+            }
+
+            // Do the request
+            return await base.SendAsync(request, cancellationToken);
+        }
     }
 }
