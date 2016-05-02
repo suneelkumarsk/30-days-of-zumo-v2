@@ -30,7 +30,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="api\cleanup.js" />
     <Compile Include="api\createKey.js" />
+    <Compile Include="api\search.js" />
+    <Compile Include="api\upload.js" />
     <Compile Include="authMiddleware.js" />
     <Compile Include="customRouter.js" />
     <Compile Include="lib\ShellmongerApp.js" />
