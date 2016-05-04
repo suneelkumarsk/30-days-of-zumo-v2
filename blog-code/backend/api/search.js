@@ -9,7 +9,7 @@ module.exports = function (configuration) {
         req.azureMobile.tables('items')
             .where({ category: req.params.category })
             .read()
-            .then(results => res.json(results))
+            .then(function (results) { return res.json(results); })
             .catch(next); // it is important to catch any errors and log them
     });
 

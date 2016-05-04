@@ -4,7 +4,8 @@
     var client,         // Connection to the Azure Mobile App backend
         origClient,     // We filter the client eventually - this is a copy of the original
         dataTable,      // Reference to the table endpoint on backend
-        apiToken;       // The API Token received from the service
+        apiToken,       // The API Token received from the service
+        pushService;
 
     var azureBackend = 'https://shellmonger-demo.azurewebsites.net';
 
@@ -85,6 +86,41 @@
         // Wire up the event handlers
         $('#add').on('click', addItemHandler);
         $('#refresh-data').on('click', handleRefresh);
+
+        // Initialize Push Notifications
+        if (typeof PushNotifiation === 'undefined') {
+            alert('Push Notifications are not available');
+        } else {
+            pushService = PushNotification.init({
+                android: { senderID: '121035973492' },
+                ios: { alert: 'true', badge: 'true', sound: 'true' },
+                wns: {}
+            });
+            pushService.on('registration', handlePushRegistration);
+            pushService.on('notification', handlePushNotification);
+            pushService.on('error', handleError);
+        }
+    }
+
+    /**
+     * Event Handler for response from PNS registration
+     * @param {object} data the response from the PNS
+     * @param {string} data.registrationId the registration Id from the PNS
+     * @event
+     */
+    function handlePushRegistration(data) {
+        var pns = 'gcm';
+        client.push.register(pns, data.registrationId);
+    }
+
+    /**
+     * Event Handler for receiving a push notification
+     * @param {object} data the payload from the PNS
+     * @param {string} data.message the textual message
+     * @event
+     */
+    function handlePushNotification(data) {
+        alert('PUSH NOTIFICATION\n' + data.message);
     }
 
     /**
