@@ -7,7 +7,7 @@
         apiToken,       // The API Token received from the service
         pushService;
 
-    var azureBackend = 'https://shellmonger-demo.azurewebsites.net';
+    var azureBackend = 'https://shell-node-demo.azurewebsites.net';
 
     document.addEventListener( 'deviceready', onDeviceReady.bind(this), false);
 
@@ -110,7 +110,10 @@
      */
     function handlePushRegistration(data) {
         var pns = 'gcm';
-        client.push.register(pns, data.registrationId);
+        var templates = {
+            tags: ['News', 'Sports', 'Politics', '$email:myboss@microsoft.com' ]
+        };
+        client.push.register(pns, data.registrationId, templates);
     }
 
     /**
@@ -125,6 +128,7 @@
 
     /**
      * Event Handler for the Refresh Button
+     * @param {object} event the event that caused the call
      * @event
      */
     function handleRefresh(event) {
@@ -192,7 +196,7 @@
         $('.item-text').on('change', updateItemTextHandler);
         // For when the enter key is pressed
         $('.item-text').on('keydown', function (event) {
-            if (event.which == 13) {
+            if (event.which === 13) {
                 updateItemTextHandler(event);
             }
         });
@@ -215,6 +219,7 @@
 
     /**
      * Add Item Handler
+     * @param {object} event the event that caused the call
      * @event
      */
     function addItemHandler(event) {
@@ -222,7 +227,7 @@
             itemText = textbox.val();
 
         console.info('[addItemHandler] itemText =', itemText);
-        if (itemText != '') {
+        if (itemText !== '') {
             updateSummaryMessage('Adding New Item');
             dataTable.insert({ text: itemText, complete: false }).then(function (item) {
                 console.info('[addItemHandler] item = ', item);
@@ -237,12 +242,13 @@
 
     /**
      * Delete Item Handler
+     * @param {object} event the event that caused the call
      * @event
      */
     function deleteItemHandler(event) {
         var id = getItemId(event.currentTarget);
 
-        console.info('[deleteItemHandler id =', id);
+        console.info('[deleteItemHandler] id =', id);
         updateSummaryMessage('Deleting Item');
         dataTable.del({ id: id }).then(function () {
             $(event.currentTarget).closest('li').remove();
@@ -253,6 +259,7 @@
 
     /**
      * Update Textbox Handler
+     * @param {object} event the event that caused the call
      * @event
      */
     function updateItemTextHandler(event) {
@@ -270,6 +277,7 @@
 
     /**
      * Update Completed Item Handler
+     * @param {object} event the event that caused the call
      * @event
      */
     function updateItemCompleteHandler(event) {

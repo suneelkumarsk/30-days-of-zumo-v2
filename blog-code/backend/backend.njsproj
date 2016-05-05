@@ -5,6 +5,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>backend</Name>
     <RootNamespace>backend</RootNamespace>
+    <NameOfLastUsedPublishProfile>shell-node-demo - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -37,10 +38,12 @@
     <Compile Include="authMiddleware.js" />
     <Compile Include="customRouter.js" />
     <Compile Include="lib\ShellmongerApp.js" />
+    <Compile Include="pushRegistration.js" />
     <Compile Include="server.js" />
     <Compile Include="tables\todoitem.js" />
     <Content Include="jsconfig.json" />
     <Content Include="package.json" />
+    <None Include="shell-node-demo - Web Deploy.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib\" />
