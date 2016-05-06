@@ -82,11 +82,22 @@
      * @event
      */
     function handlePushRegistration(data) {
-        var pns = 'gcm';
-        var templates = {
-            tags: ['News', 'Sports', 'Politics', '$email:myboss@microsoft.com' ]
+        var apiOptions = {
+            method: 'POST',
+            body: {
+                pushChannel: data.registrationId,
+                tags: ['News', 'Sports', 'Politics', '$email:myboss@microsoft.com' ]
+            }
         };
-        client.push.register(pns, data.registrationId, templates);
+
+        var success = function () {
+            alert('Push Registered');
+        }
+        var failure = function (error) {
+            alert('Push Failed: ' + error.message);
+        }
+
+        client.invokeApi("register", apiOptions).then(success, failure);
     }
 
     /**
