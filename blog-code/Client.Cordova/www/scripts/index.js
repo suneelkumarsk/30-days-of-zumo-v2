@@ -6,7 +6,7 @@
         dataTable,      // Reference to the table endpoint on backend
         pushService;
 
-    var azureBackend = 'https://shell-node-demo.azurewebsites.net';
+    var azureBackend = 'https://shellmonger-demo.azurewebsites.net';
 
     document.addEventListener('deviceready', onDeviceReady.bind(this), false);
 
@@ -18,17 +18,14 @@
     function onDeviceReady() {
         console.info('Creating Connection to Backend ' + azureBackend);
         client = new WindowsAzure.MobileServiceClient(azureBackend);
-
-        function createKeySuccess(response) {
-            dataTable = client.getTable('TodoItem');
-            $('#loginButton').on('click', function (event) {
-                event.preventDefault();
-                client.login('aad').then(initializeApp, function (error) {
-                    console.error('Authentication Failed: ', error);
-                    alert('Authentication Failed');
-                });
+        dataTable = client.getTable('TodoItem');
+        $('#loginButton').on('click', function (event) {
+            event.preventDefault();
+            client.login('aad').then(initializeApp, function (error) {
+                console.error('Authentication Failed: ', error);
+                alert('Authentication Failed');
             });
-        }
+        });
     }
 
     /**
@@ -64,7 +61,7 @@
         $('#refresh-data').on('click', handleRefresh);
 
         // Initialize Push Notifications
-        if (typeof PushNotifiation === 'undefined') {
+        if (typeof PushNotification === 'undefined') {
             alert('Push Notifications are not available');
         } else {
             pushService = PushNotification.init({
