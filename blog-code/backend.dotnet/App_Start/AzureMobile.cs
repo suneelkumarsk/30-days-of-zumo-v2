@@ -23,7 +23,7 @@ namespace backend.dotnet
                         .MapTableControllers()
                         .AddEntityFramework())
                 .MapApiControllers()
-                .AddPushNotifications()
+                //.AddPushNotifications()
                 .ApplyTo(config);
 
             // Initialize the database with EF Code First
