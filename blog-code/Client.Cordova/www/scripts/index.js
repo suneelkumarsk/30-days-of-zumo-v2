@@ -4,12 +4,11 @@
     var client,         // Connection to the Azure Mobile App backend
         origClient,     // We filter the client eventually - this is a copy of the original
         dataTable,      // Reference to the table endpoint on backend
-        apiToken,       // The API Token received from the service
         pushService;
 
     var azureBackend = 'https://shell-node-demo.azurewebsites.net';
 
-    document.addEventListener( 'deviceready', onDeviceReady.bind(this), false);
+    document.addEventListener('deviceready', onDeviceReady.bind(this), false);
 
     /**
      * Event handler, called when the host is ready to process requests
@@ -19,16 +18,8 @@
     function onDeviceReady() {
         console.info('Creating Connection to Backend ' + azureBackend);
         client = new WindowsAzure.MobileServiceClient(azureBackend);
-        console.info('Calling /api/createKey');
-        client.invokeApi('createKey', { method: 'GET' }).then(createKeySuccess, createKeyFailure);
 
         function createKeySuccess(response) {
-            apiToken = response.result.jwt;
-
-            // Add a filter for every future request
-            origClient = client; // Keep a copy around of the old client
-            client = origClient.withFilter(addApplicationKeyHeader);
-
             dataTable = client.getTable('TodoItem');
             $('#loginButton').on('click', function (event) {
                 event.preventDefault();
@@ -38,26 +29,11 @@
                 });
             });
         }
-
-        function createKeyFailure(error) {
-            console.error('/api/createKey returned Error: ', error);
-            alert('INVALID KEY RECEIVED');
-        }
     }
 
     /**
-     * Service Filter for adding header to the application
-     * @param {object} request the original request
-     * @param {function} next the next filter in the list
-     * @param {function} callback if not using promises, the callback
+     * Initializes the app
      */
-    function addApplicationKeyHeader(request, next, callback) {
-        console.log('[addApplicationKeyHeader] request = ', request);
-        if (typeof apiToken === 'string' && apiToken.length > 1)
-            request.headers['X-LOCAL-APITOKEN'] = apiToken;
-        next(request, callback);
-    }
-
     function initializeApp() {
         console.info('client.currentUser:', client.currentUser);
         $('#wrapper').empty();
