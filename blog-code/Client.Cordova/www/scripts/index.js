@@ -108,14 +108,15 @@
      */
     function handlePushNotification(data) {
         if (data.message === 'PUSH-TO-SYNC') {
+
             var id = data.id;
             var op = data.op;
             var table = data.table;
             var originator = data.orig;
             if (originator == client._applicationInstallationId) {
-                alert('ME:' + op + ':(' + table + '#' + id);
+                alert('ME:' + JSON.stringify(data));
             } else {
-                alert('OTHER:' + op + ':(' + table + '#' + id);
+                alert('OTHER:' + JSON.stringify(data));
             }
         } else {
             alert('PUSH NOTIFICATION\n' + data.message);
