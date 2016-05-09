@@ -126,6 +126,7 @@ namespace backend.dotnet.Controllers
             var hub = Configuration.GetPushClient().HubClient;
             var emailAddr = await GetEmailAddress();
             var tag = $"_email_{emailAddr}";
+            var installationId = Request.Headers.Where(p => p.Key.Equals("X-ZUMO-INSTALLATION-ID")).FirstOrDefault().Value.FirstOrDefault();
 
             // Construct a payload
             var payload = new PushToSyncPayload
@@ -133,7 +134,8 @@ namespace backend.dotnet.Controllers
                 Message = "PUSH-TO-SYNC",
                 Table = "todoitem",
                 Operation = op,
-                Id = id
+                Id = id,
+                Originator = installationId
             };
             var jsonPayload = JsonConvert.SerializeObject(payload);
 
@@ -152,5 +154,7 @@ namespace backend.dotnet.Controllers
         public string Operation { get; set; }
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
+        [JsonProperty(PropertyName = "orig")]
+        public string Originator { get; set; }
     }
 }

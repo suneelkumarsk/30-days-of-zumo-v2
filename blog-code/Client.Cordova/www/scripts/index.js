@@ -107,7 +107,19 @@
      * @event
      */
     function handlePushNotification(data) {
-        alert('PUSH NOTIFICATION\n' + data.message);
+        if (data.message === 'PUSH-TO-SYNC') {
+            var id = data.id;
+            var op = data.op;
+            var table = data.table;
+            var originator = data.orig;
+            if (originator == client._applicationInstallationId) {
+                alert('ME:' + op + ':(' + table + '#' + id);
+            } else {
+                alert('OTHER:' + op + ':(' + table + '#' + id);
+            }
+        } else {
+            alert('PUSH NOTIFICATION\n' + data.message);
+        }
     }
 
     /**
