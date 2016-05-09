@@ -11,6 +11,7 @@ using Microsoft.Azure.Mobile.Server;
 using Microsoft.Azure.Mobile.Server.Authentication;
 using backend.dotnet.DataObjects;
 using backend.dotnet.Models;
+using Newtonsoft.Json;
 
 namespace backend.dotnet.Controllers
 {
@@ -56,7 +57,9 @@ namespace backend.dotnet.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
             }
-            return await UpdateAsync(id, patch);
+            var newItem = await UpdateAsync(id, patch);
+            await PushToSync("PUT", id);
+            return newItem;
         }
 
         // POST tables/TodoItem
@@ -71,6 +74,7 @@ namespace backend.dotnet.Controllers
             {
                 TodoItem current = await InsertAsync(item);
                 Debug.WriteLine($"Updated Item = {current}");
+                await PushToSync("POST", current.Id);
                 return CreatedAtRoute("Tables", new { id = current.Id }, current);
             }
             catch (HttpResponseException ex)
@@ -97,6 +101,7 @@ namespace backend.dotnet.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
             }
+            await PushToSync("DELETE", id);
             await DeleteAsync(id);
         }
 
@@ -115,5 +120,37 @@ namespace backend.dotnet.Controllers
                 .First<Claim>()
                 .Value;
         }
+
+        private async Task PushToSync(string op, string id)
+        {
+            var hub = Configuration.GetPushClient().HubClient;
+            var emailAddr = await GetEmailAddress();
+            var tag = $"_email_{emailAddr}";
+
+            // Construct a payload
+            var payload = new PushToSyncPayload
+            {
+                Message = "PUSH-TO-SYNC",
+                Table = "todoitem",
+                Operation = op,
+                Id = id
+            };
+            var jsonPayload = JsonConvert.SerializeObject(payload);
+
+            // Push the request via the Notification Hub
+            var outcome = await hub.SendGcmNativeNotificationAsync($"{{\"data\":{jsonPayload}}}", tag);
+        }
+    }
+
+    public class PushToSyncPayload
+    {
+        [JsonProperty(PropertyName = "message")]
+        public string Message { get; set; }
+        [JsonProperty(PropertyName = "table")]
+        public string Table { get; set; }
+        [JsonProperty(PropertyName = "op")]
+        public string Operation { get; set; }
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
     }
 }

@@ -91,10 +91,10 @@
         };
 
         var success = function () {
-            alert('Push Registered');
+            //alert('Push Registered');
         }
         var failure = function (error) {
-            alert('Push Failed: ' + error.message);
+            alert('Push Registration Failed: ' + error.message);
         }
 
         client.invokeApi("register", apiOptions).then(success, failure);
@@ -213,7 +213,7 @@
         console.info('[addItemHandler] itemText =', itemText);
         if (itemText !== '') {
             updateSummaryMessage('Adding New Item');
-            dataTable.insert({ text: itemText, complete: false }).then(function (item) {
+            dataTable.insert({ title: itemText, complete: false }).then(function (item) {
                 console.info('[addItemHandler] item = ', item);
                 updateSummaryMessage('Item added in Azure');
                 var listItem = createTask(item);
