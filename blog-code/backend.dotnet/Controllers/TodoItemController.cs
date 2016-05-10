@@ -129,13 +129,16 @@ namespace backend.dotnet.Controllers
             var installationId = Request.Headers.Where(p => p.Key.Equals("X-ZUMO-INSTALLATION-ID")).FirstOrDefault().Value.FirstOrDefault();
 
             // Construct a payload
-            var payload = new PushToSyncPayload
+            var payload = new GcmPayload
             {
                 Message = "PUSH-TO-SYNC",
-                Table = "todoitem",
-                Operation = op,
-                Id = id,
-                Originator = installationId
+                AdditionalData = new PushToSyncPayload
+                {
+                    Table = "todoitem",
+                    Operation = op,
+                    Id = id,
+                    Originator = installationId
+                }
             };
             var jsonPayload = JsonConvert.SerializeObject(payload);
 
@@ -144,16 +147,26 @@ namespace backend.dotnet.Controllers
         }
     }
 
+    public class GcmPayload
+    {
+        [JsonProperty(PropertyName ="message")]
+        public string Message { get; set; }
+
+        [JsonProperty(PropertyName ="additionalData")]
+        public object AdditionalData { get; set; }
+    }
+
     public class PushToSyncPayload
     {
-        [JsonProperty(PropertyName = "message")]
-        public string Message { get; set; }
         [JsonProperty(PropertyName = "table")]
         public string Table { get; set; }
+
         [JsonProperty(PropertyName = "op")]
         public string Operation { get; set; }
+
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
+
         [JsonProperty(PropertyName = "orig")]
         public string Originator { get; set; }
     }

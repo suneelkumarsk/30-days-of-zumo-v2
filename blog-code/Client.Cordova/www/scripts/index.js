@@ -109,14 +109,14 @@
     function handlePushNotification(data) {
         if (data.message === 'PUSH-TO-SYNC') {
 
-            var id = data.id;
-            var op = data.op;
-            var table = data.table;
+            var id = data.additionalData.id;
+            var op = data.additionalData.op;
+            var table = data.additionalData.table;
             var originator = data.orig;
-            if (originator == client._applicationInstallationId) {
-                alert('ME:' + JSON.stringify(data));
-            } else {
+            if (originator !== client.getApplicationInstallationId()) {
                 alert('OTHER:' + JSON.stringify(data));
+            } else {
+                alert('ME:' + JSON.stringify(data));
             }
         } else {
             alert('PUSH NOTIFICATION\n' + data.message);
