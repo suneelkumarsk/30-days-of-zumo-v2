@@ -116,6 +116,7 @@ namespace Client.UWP.Services
             {
                 await provider.Client.SyncContext.PushAsync();
                 await syncTable.PullAsync(queryName, syncTable.CreateQuery());
+                
             }
             catch (MobileServicePushFailedException exception)
             {

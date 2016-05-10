@@ -126,38 +126,33 @@ namespace backend.dotnet.Controllers
             var hub = Configuration.GetPushClient().HubClient;
             var emailAddr = await GetEmailAddress();
             var tag = $"_email_{emailAddr}";
-            var installationId = Request.Headers.Where(p => p.Key.Equals("X-ZUMO-INSTALLATION-ID")).FirstOrDefault().Value.FirstOrDefault();
+            var installationId = Request.Headers
+                .Where(p => p.Key.Equals("X-ZUMO-INSTALLATION-ID")).FirstOrDefault()
+                .Value.FirstOrDefault();
 
             // Construct a payload
-            var payload = new GcmPayload
+            var payload = new PushToSyncPayload
             {
                 Message = "PUSH-TO-SYNC",
-                AdditionalData = new PushToSyncPayload
-                {
-                    Table = "todoitem",
-                    Operation = op,
-                    Id = id,
-                    Originator = installationId
-                }
+                Table = "todoitem",
+                Operation = op,
+                Id = id,
+                Originator = installationId
             };
             var jsonPayload = JsonConvert.SerializeObject(payload);
+            Debug.WriteLine($"Sending Push-to-Sync: Data = {jsonPayload}");
 
             // Push the request via the Notification Hub
             var outcome = await hub.SendGcmNativeNotificationAsync($"{{\"data\":{jsonPayload}}}", tag);
+            Debug.WriteLine($"Push-to-sync response = {outcome.State}");
         }
-    }
-
-    public class GcmPayload
-    {
-        [JsonProperty(PropertyName ="message")]
-        public string Message { get; set; }
-
-        [JsonProperty(PropertyName ="additionalData")]
-        public object AdditionalData { get; set; }
     }
 
     public class PushToSyncPayload
     {
+        [JsonProperty(PropertyName = "message")]
+        public string Message { get; set; }
+
         [JsonProperty(PropertyName = "table")]
         public string Table { get; set; }
 
