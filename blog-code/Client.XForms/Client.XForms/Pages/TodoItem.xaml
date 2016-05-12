@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Client.XForms.Pages.TodoItem"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <ContentPage.Content>
+        <StackLayout Padding="10" Spacing="10">
+            <Label Text="Title" />
+            <Entry Text="{Binding Text}" />
+            <Label Text="Complete" />
+            <Switch IsToggled="{Binding Complete}" />
+            <StackLayout VerticalOptions="CenterAndExpand" />
+            <StackLayout Orientation="Vertical" VerticalOptions="End">
+                <Button BackgroundColor="#A6E55E"
+                        Command="{Binding SaveItemCommand}"
+                        Text="Save"
+                        TextColor="White" />
+                <Button BackgroundColor="#F1836E"
+                        Command="{Binding DelteItemCommand}"
+                        Text="Delete"
+                        TextColor="White" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
