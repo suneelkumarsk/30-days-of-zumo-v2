@@ -9,32 +9,25 @@ using Backend.Models;
 
 namespace Backend.Controllers
 {
+    [Authorize]
     public class TodoItemController : TableController<TodoItem>
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            MobileServiceContext context = new MobileServiceContext();
+            var context = new MobileServiceContext();
             DomainManager = new EntityDomainManager<TodoItem>(context, Request);
         }
 
         // GET tables/TodoItem
-        public IQueryable<TodoItem> GetAllTodoItems()
-        {
-            return Query();
-        }
+        public IQueryable<TodoItem> GetAllTodoItems() => Query();
+
 
         // GET tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        public SingleResult<TodoItem> GetTodoItem(string id)
-        {
-            return Lookup(id);
-        }
+        public SingleResult<TodoItem> GetTodoItem(string id) => Lookup(id);
 
         // PATCH tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        public Task<TodoItem> PatchTodoItem(string id, Delta<TodoItem> patch)
-        {
-            return UpdateAsync(id, patch);
-        }
+        public Task<TodoItem> PatchTodoItem(string id, Delta<TodoItem> patch) => UpdateAsync(id, patch);
 
         // POST tables/TodoItem
         public async Task<IHttpActionResult> PostTodoItem(TodoItem item)
@@ -44,9 +37,6 @@ namespace Backend.Controllers
         }
 
         // DELETE tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
-        public Task DeleteTodoItem(string id)
-        {
-            return DeleteAsync(id);
-        }
+        public Task DeleteTodoItem(string id) => DeleteAsync(id);
     }
 }
