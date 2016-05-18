@@ -37,6 +37,11 @@ namespace XamarinTodo.Services
             return items.AsEnumerable();
         }
 
+        public async Task<StorageTokenViewModel> GetStorageToken()
+        {
+            return null;
+        }
+
         public async Task InitializeAsync()
         {
             Debug.WriteLine($"[MockCloudService] InitializeAsync called");

@@ -3,6 +3,7 @@ using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
 using Microsoft.WindowsAzure.MobileServices.Sync;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using XamarinTodo.Models;
@@ -98,6 +99,11 @@ namespace XamarinTodo.Services
 
             await SynchronizeServiceAsync();
             return await itemTable.LookupAsync(item.Id);
+        }
+
+        public Task<StorageTokenViewModel> GetStorageToken()
+        {
+            return MobileService.InvokeApiAsync<StorageTokenViewModel>("GetStorageToken", HttpMethod.Get, null);
         }
     }
 }

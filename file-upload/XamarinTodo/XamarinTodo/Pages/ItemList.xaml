@@ -31,10 +31,18 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button BackgroundColor="Teal"
-                    Command="{Binding AddNewItemCommand}"
-                    Text="Add New Item"
-                    TextColor="White" />
+            <StackLayout HorizontalOptions="FillAndExpand"
+                         Orientation="Horizontal"
+                         Padding="10">
+                <Button BackgroundColor="Teal"
+                        Command="{Binding AddNewItemCommand}"
+                        Text="Add New Item"
+                        TextColor="White" />
+                <Button BackgroundColor="Purple"
+                        Command="{Binding UploadFileCommand}"
+                        Text="Upload File"
+                        TextColor="White" />
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

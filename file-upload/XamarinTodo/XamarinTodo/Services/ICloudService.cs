@@ -19,5 +19,7 @@ namespace XamarinTodo.Services
         Task LoginAsync();
 
         Task LogoutAsync();
+
+        Task<StorageTokenViewModel> GetStorageToken();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using Plugin.Media;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -8,6 +9,8 @@ using Xamarin.Forms;
 using XamarinTodo.Helpers;
 using XamarinTodo.Models;
 using XamarinTodo.Services;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace XamarinTodo.ViewModels
 {
@@ -108,6 +111,44 @@ namespace XamarinTodo.ViewModels
             catch (Exception ex)
             {
                 UserDialogs.Instance.ShowError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        Command c_uploadFile;
+        public Command UploadFileCommand
+        {
+            get { return c_uploadFile ?? (c_uploadFile = new Command(async () => await ExecuteUploadFileCommand())); }
+        }
+
+        async Task ExecuteUploadFileCommand()
+        {
+            if (IsBusy) return;
+            IsBusy = true;
+
+            Uri storageUri = null;
+            try
+            {
+                // Xamarin Media Plugin to get a picture
+                await CrossMedia.Current.Initialize();
+                var file = await CrossMedia.Current.PickPhotoAsync();
+
+                // Get the storage token from the custom API
+                var storageToken = await cloudService.GetStorageToken();
+                storageUri = new Uri($"{storageToken.Uri}{storageToken.SasToken}");
+
+                // Store the MediaFile to the storage token
+                var blob = new CloudBlockBlob(storageUri);
+                var stream = file.GetStream();
+                await blob.UploadFromStreamAsync(stream);
+                UserDialogs.Instance.SuccessToast("File Upload Complete", null, 1500);
+            }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.Alert(storageUri.ToString(), ex.Message, "OK");
             }
             finally
             {
