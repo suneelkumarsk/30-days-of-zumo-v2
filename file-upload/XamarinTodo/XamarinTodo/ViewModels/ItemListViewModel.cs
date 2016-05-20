@@ -76,15 +76,18 @@ namespace XamarinTodo.ViewModels
 
             try
             {
+                UserDialogs.Instance.ShowLoading("Loading Items...");
                 var list = await cloudService.GetAllItemsAsync();
                 Items.Clear();
                 foreach (var item in list)
                 {
                     Items.Add(item);
                 }
+                UserDialogs.Instance.HideLoading();
             }
             catch (Exception ex)
             {
+                UserDialogs.Instance.HideLoading();
                 UserDialogs.Instance.ShowError(ex.Message);
             }
             finally

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Xamarin.Forms;
-using XamarinTodo.Models;
+﻿using Xamarin.Forms;
+using XamarinTodo.Helpers;
+using XamarinTodo.Services;
 
 namespace XamarinTodo.Pages
 {

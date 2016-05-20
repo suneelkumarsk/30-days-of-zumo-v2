@@ -33,8 +33,7 @@ namespace XamarinTodo.ViewModels
                 Debug.WriteLine("[ExecuteLoginCommand] Calling LoginAsync()");
                 await cloudService.LoginAsync();
                 Debug.WriteLine("[ExecuteLoginCommand] Finished LoginAsync()");
-                var nav = Application.Current.MainPage as NavigationPage;
-                await nav.PushAsync(new Pages.ItemList());
+                Application.Current.MainPage = new NavigationPage(new Pages.ItemList());
             }
             catch (Exception ex)
             {
