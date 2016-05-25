@@ -83,21 +83,11 @@ namespace ClientApp.ViewModels
 
         Command c_refresh, c_addNew;
 
-        public Command RefreshCommand
-        {
-            get
-            {
-                return c_refresh ?? (c_refresh = new Command(async () => await ExecuteRefreshCommand()));
-            }
-        }
+#pragma warning disable RECS0165 // Asynchronous methods should return a Task instead of void
+        public Command RefreshCommand => c_refresh ?? (c_refresh = new Command(async () => await ExecuteRefreshCommand()));
 
-        public Command AddNewItemCommand
-        {
-            get
-            {
-                return c_addNew ?? (c_addNew = new Command(async () => await ExecuteAddNewItemCommand()));
-            }
-        }
+        public Command AddNewItemCommand => c_addNew ?? (c_addNew = new Command(async () => await ExecuteAddNewItemCommand()));
+#pragma warning restore RECS0165 // Asynchronous methods should return a Task instead of void
 
         async Task ExecuteRefreshCommand()
         {
@@ -157,11 +147,13 @@ namespace ClientApp.ViewModels
         async Task RefreshList()
         {
             await ExecuteRefreshCommand();
+#pragma warning disable RECS0165 // Asynchronous methods should return a Task instead of void
             MessagingCenter.Subscribe<ItemDetailViewModel>(this, "ItemsChanged", async (sender) =>
             {
                 Debug.WriteLine("[ItemListViewModel] ItemsChanged Event received");
                 await ExecuteRefreshCommand();
             });
+#pragma warning restore RECS0165 // Asynchronous methods should return a Task instead of void
         }
     }
 }

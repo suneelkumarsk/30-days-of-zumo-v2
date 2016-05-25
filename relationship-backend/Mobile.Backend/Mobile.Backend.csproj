@@ -185,6 +185,7 @@
     <Compile Include="Controllers\TagController.cs" />
     <Compile Include="Controllers\TodoItemController.cs" />
     <Compile Include="DataObjects\TodoItem.cs" />
+    <Compile Include="Helpers\ExpandPropertyAttribute.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

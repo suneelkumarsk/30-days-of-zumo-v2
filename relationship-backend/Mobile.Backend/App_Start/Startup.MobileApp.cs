@@ -17,7 +17,7 @@ namespace Mobile.Backend
     {
         public static void ConfigureMobileApp(IAppBuilder app)
         {
-            HttpConfiguration config = new HttpConfiguration();
+            var config = new HttpConfiguration();
 
             new MobileAppConfiguration()
                 .UseDefaultConfiguration()
@@ -49,16 +49,17 @@ namespace Mobile.Backend
     {
         protected override void Seed(MobileServiceContext context)
         {
-            List<Tag> tags = new List<Tag>
+            var tags = new List<Tag>
             {
-                new Tag { Id = Guid.NewGuid().ToString(), TagName = "Urgent" }
+                new Tag { Id = Guid.NewGuid().ToString(), TagName = "Urgent" },
+                new Tag { Id = Guid.NewGuid().ToString(), TagName = "Question" }
             };
 
 
-            List<TodoItem> todoItems = new List<TodoItem>
+            var todoItems = new List<TodoItem>
             {
-                new TodoItem { Id = Guid.NewGuid().ToString(), Text = "First item", Complete = false, Tag = tags.First() },
-                new TodoItem { Id = Guid.NewGuid().ToString(), Text = "Second item", Complete = false, Tag = null }
+                new TodoItem { Id = Guid.NewGuid().ToString(), Text = "First item", Complete = false, Tags = tags },
+                new TodoItem { Id = Guid.NewGuid().ToString(), Text = "Second item", Complete = false, Tags = null }
             };
 
             foreach (Tag tag in tags)

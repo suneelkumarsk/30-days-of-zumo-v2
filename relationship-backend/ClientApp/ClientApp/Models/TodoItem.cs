@@ -1,5 +1,4 @@
 ﻿using ClientApp.Helpers;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClientApp.Models
 {
@@ -14,8 +13,5 @@ namespace ClientApp.Models
         public bool Complete { get; set; }
 
         public string TagId { get; set; }
-
-        [ForeignKey("TagId")]
-        public Tag Tag { get; set; }
     }
 }

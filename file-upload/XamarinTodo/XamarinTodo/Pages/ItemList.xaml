@@ -42,6 +42,7 @@
                         Command="{Binding UploadFileCommand}"
                         Text="Upload File"
                         TextColor="White" />
+                <ActivityIndicator IsRunning="{Binding IsBusy}" />
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

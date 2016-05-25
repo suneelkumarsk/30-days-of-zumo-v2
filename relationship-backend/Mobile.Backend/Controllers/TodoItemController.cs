@@ -6,6 +6,7 @@ using System.Web.Http.OData;
 using Microsoft.Azure.Mobile.Server;
 using Mobile.Backend.DataObjects;
 using Mobile.Backend.Models;
+using Mobile.Backend.Helpers;
 
 namespace Mobile.Backend.Controllers
 {
@@ -14,14 +15,16 @@ namespace Mobile.Backend.Controllers
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            MobileServiceContext context = new MobileServiceContext();
+            var context = new MobileServiceContext();
             DomainManager = new EntityDomainManager<TodoItem>(context, Request);
         }
 
         // GET tables/TodoItem
+        [ExpandProperty("Tags")]
         public IQueryable<TodoItem> GetAllTodoItems() => Query();
 
         // GET tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
+        [ExpandProperty("Tags")]
         public SingleResult<TodoItem> GetTodoItem(string id) => Lookup(id);
 
         // PATCH tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959

@@ -122,5 +122,11 @@ namespace ClientApp.Services
                 return false;
             }
         }
+
+        public async Task<Tag> GetTagByIdAsync(string id)
+        {
+            await InitializeAsync();
+            return await tagTable.LookupAsync(id);
+        }
     }
 }

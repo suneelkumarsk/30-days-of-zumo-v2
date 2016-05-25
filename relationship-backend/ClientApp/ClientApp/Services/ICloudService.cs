@@ -17,6 +17,9 @@ namespace ClientApp.Services
 
         #region Tag CRUD
         Task<IEnumerable<Tag>> GetAllTagsAsync();
+
+        Task<Tag> GetTagByIdAsync(string id);
+
         Task<Tag> UpsertTagAsync(Tag item);
         Task<bool> DeleteTagAsync(Tag item);
         #endregion

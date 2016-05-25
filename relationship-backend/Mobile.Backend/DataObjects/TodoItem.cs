@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.Mobile.Server;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mobile.Backend.DataObjects
@@ -10,15 +11,11 @@ namespace Mobile.Backend.DataObjects
 
     public class TodoItem : EntityData
     {
+
         public string Text { get; set; }
 
         public bool Complete { get; set; }
 
-        #region Relationships
-        public string TagId { get; set; }
-
-        [ForeignKey("TagId")]
-        public Tag Tag { get; set; }
-        #endregion
+        public virtual ICollection<Tag> Tags { get; set; }
     }
 }
