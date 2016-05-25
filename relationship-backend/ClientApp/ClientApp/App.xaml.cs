@@ -10,7 +10,7 @@ namespace ClientApp
         {
             InitializeComponent();
             ServiceLocator.Instance.Add<ICloudService, AzureCloudService>();
-            MainPage = new NavigationPage(new Pages.TodoList());
+            MainPage = new NavigationPage(new Pages.ItemList());
         }
     }
 }
