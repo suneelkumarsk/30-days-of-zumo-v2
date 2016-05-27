@@ -20,11 +20,16 @@ namespace XamarinTodo.Droid
             // Initialization for Acr.UserDialogs
             UserDialogs.Init(this);
 
+            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
             // Initialize the Droid version of the LoginProvider
             var loginProvider = (DroidLoginProvider)DependencyService.Get<ILoginProvider>();
             loginProvider.Initialize(this);
 
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            // Initialize the Droid version of the FileProvider
+            var fileProvider = (DroidFileProvider)DependencyService.Get<IFileProvider>();
+            fileProvider.UIContext = this;
+
             LoadApplication(new App());
         }
     }

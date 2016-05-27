@@ -1,5 +1,8 @@
 ﻿using Acr.UserDialogs;
+using Microsoft.WindowsAzure.MobileServices.Files;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -26,15 +29,33 @@ namespace XamarinTodo.ViewModels
                 Title = "New Item";
             }
             cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
+
+            // Load the Images async
+            Images = new ObservableCollection<TodoItemImage>();
+            LoadImagesAsync();
         }
 
         public TodoItem Item { get; set; }
+        public ObservableCollection<TodoItemImage> Images { get; set; }
+
+        public async Task LoadImagesAsync()
+        {
+            IEnumerable<MobileServiceFile> files = await cloudService.GetItemImageFilesAsync(Item);
+            Images.Clear();
+            foreach (var file in files)
+            {
+                Images.Add(new TodoItemImage(file, Item));
+            }
+        }
 
         #region Commands
         Command c_save;
         public Command SaveCommand
         {
-            get { return c_save ?? (c_save = new Command(async () => ExecuteSaveCommand())); }
+            get
+            {
+                return c_save ?? (c_save = new Command(async () => ExecuteSaveCommand()));
+            }
         }
 
         async Task ExecuteSaveCommand()
@@ -66,7 +87,10 @@ namespace XamarinTodo.ViewModels
         Command c_delete;
         public Command DeleteCommand
         {
-            get { return c_delete ?? (c_delete = new Command(async () => ExecuteDeleteCommand())); }
+            get
+            {
+                return c_delete ?? (c_delete = new Command(async () => ExecuteDeleteCommand()));
+            }
         }
 
         async Task ExecuteDeleteCommand()
@@ -81,6 +105,39 @@ namespace XamarinTodo.ViewModels
                 UserDialogs.Instance.HideLoading();
                 MessagingCenter.Send<ItemDetailViewModel>(this, "ItemsChanged");
                 var nav = Application.Current.MainPage.Navigation.PopAsync(); // Pop Back
+            }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.ShowError(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        Command c_addimage;
+        public Command AddImageCommand
+        {
+            get
+            {
+                return c_addimage ?? (c_addimage = new Command(async () => ExecuteAddImageCommand()));
+            }
+        }
+
+        async Task ExecuteAddImageCommand()
+        {
+            if (IsBusy) return;
+            IsBusy = true;
+
+            try
+            {
+                var image = await DependencyService.Get<IFileProvider>().GetImageAsync();
+                if (image != null)
+                {
+                    MobileServiceFile file = await cloudService.AddItemImageAsync(Item, image);
+                    Images.Add(new TodoItemImage(file, Item));
+                }
             }
             catch (Exception ex)
             {

@@ -7,6 +7,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using XamarinTodo.Models;
+using Microsoft.WindowsAzure.MobileServices.Files;
+using System.IO;
+using System.Diagnostics;
 
 namespace XamarinTodo.Services
 {
@@ -60,7 +63,15 @@ namespace XamarinTodo.Services
             var store = new MobileServiceSQLiteStore("xamarintodo.db");
             store.DefineTable<TodoItem>();
 
-            await MobileService.SyncContext.InitializeAsync(store, new MobileServiceSyncHandler());
+            // Initialize File Sync
+            MobileService.InitializeFileSyncContext(new TodoItemFileSyncHandler(), store);
+
+            // Initialize the sync context
+            await MobileService.SyncContext.InitializeAsync(store,
+                new MobileServiceSyncHandler(),
+                StoreTrackingOptions.NotifyLocalAndServerOperations);
+
+            // Get a reference to the sync table
             itemTable = MobileService.GetSyncTable<TodoItem>();
 
             isInitialized = true;
@@ -80,6 +91,7 @@ namespace XamarinTodo.Services
         {
             await InitializeAsync();
             await MobileService.SyncContext.PushAsync();
+            await itemTable.PushFileChangesAsync();
             await itemTable.PullAsync("allitems", itemTable.CreateQuery());
         }
 
@@ -102,8 +114,24 @@ namespace XamarinTodo.Services
         }
 
         public Task<StorageTokenViewModel> GetStorageToken()
+            => MobileService.InvokeApiAsync<StorageTokenViewModel>("GetStorageToken", HttpMethod.Get, null);
+
+        public async Task DownloadItemFileAsync(MobileServiceFile file)
         {
-            return MobileService.InvokeApiAsync<StorageTokenViewModel>("GetStorageToken", HttpMethod.Get, null);
+            var item = await itemTable.LookupAsync(file.ParentId);
+            var path = await FileHelper.GetLocalFilePathAsync(file.ParentId, file.Name);
+            var fileProvider = DependencyService.Get<IFileProvider>();
+            await fileProvider.DownloadFileAsync(itemTable, file, path);
         }
+
+        public async Task<MobileServiceFile> AddItemImageAsync(TodoItem item, string image)
+        {
+            var path = await FileHelper.CopyItemFileAsync(item.Id, image);
+            return await itemTable.AddFileAsync(item, Path.GetFileName(path));
+        }
+
+        public async Task<IEnumerable<MobileServiceFile>> GetItemImageFilesAsync(TodoItem item)
+            => await itemTable.GetFilesAsync(item);
+
     }
 }

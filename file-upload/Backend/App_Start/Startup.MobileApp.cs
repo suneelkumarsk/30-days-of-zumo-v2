@@ -18,6 +18,9 @@ namespace Backend
         {
             var config = new HttpConfiguration();
 
+            // Register the StorageController routes
+            config.MapHttpAttributeRoutes();
+
             new MobileAppConfiguration()
                 .UseDefaultConfiguration()
                 .ApplyTo(config);

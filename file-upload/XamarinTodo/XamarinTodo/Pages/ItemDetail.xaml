@@ -8,12 +8,25 @@
             <Entry Text="{Binding Item.Text}" />
             <Label Text="Completed?" />
             <Switch IsToggled="{Binding Item.Complete}" />
+            <ListView x:Name="imagesList"
+                      IsPullToRefreshEnabled="false"
+                      ItemsSource="{Binding Images}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ImageCell ImageSource="{Binding Uri}" Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
             <StackLayout VerticalOptions="CenterAndExpand" />
             <StackLayout Orientation="Vertical" VerticalOptions="End">
                 <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
                     <Button BackgroundColor="#A6E55E"
                             Command="{Binding SaveCommand}"
                             Text="Save"
+                            TextColor="White" />
+                    <Button BackgroundColor="#A6E55E"
+                            Command="{Binding AddImageCommand}"
+                            Text="Add Image"
                             TextColor="White" />
                     <Button BackgroundColor="Red"
                             Command="{Binding DeleteCommand}"

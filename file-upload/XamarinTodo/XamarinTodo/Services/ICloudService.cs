@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.WindowsAzure.MobileServices.Files;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using XamarinTodo.Models;
 
@@ -21,5 +22,13 @@ namespace XamarinTodo.Services
         Task LogoutAsync();
 
         Task<StorageTokenViewModel> GetStorageToken();
+
+        Task DownloadItemFileAsync(MobileServiceFile file);
+
+        Task<MobileServiceFile> AddItemImageAsync(TodoItem item, string image);
+
+        Task<IEnumerable<MobileServiceFile>> GetItemImageFilesAsync(TodoItem item);
+
+
     }
 }
