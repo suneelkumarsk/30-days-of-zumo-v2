@@ -24,7 +24,7 @@ namespace XamarinTodo.Services
         public async Task ProcessFileSynchronizationAction(MobileServiceFile file, FileSynchronizationAction action)
         {
             if (action == FileSynchronizationAction.Delete)
-                await FileHelper.DeleteLocalFileAsync(file);
+                await fileProvider.DeleteLocalFileAsync(file);
             else
                 await cloudService.DownloadItemFileAsync(file);
         }

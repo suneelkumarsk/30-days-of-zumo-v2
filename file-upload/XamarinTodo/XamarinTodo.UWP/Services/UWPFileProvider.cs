@@ -14,6 +14,35 @@ namespace XamarinTodo.UWP.Services
 {
     public class UWPFileProvider : IFileProvider
     {
+		public async Task<string> CopyItemFileAsync(string itemId, string filePath)
+		{
+			string fileName = System.IO.Path.GetFileName(filePath);
+			string targetPath = await GetLocalFilePathAsync(itemId, fileName);
+
+			var sourceFile = await FileSystem.Current.GetFileFromPathAsync(filePath);
+			var sourceStream = await sourceFile.OpenAsync(FileAccess.Read);
+
+			var targetFile = await FileSystem.Current.LocalStorage.CreateFileAsync(targetPath, CreationCollisionOption.ReplaceExisting);
+			using (var targetStream = await targetFile.OpenAsync(FileAccess.ReadAndWrite))
+			{
+				await sourceStream.CopyToAsync(targetStream);
+			}
+
+			return targetPath;
+		}
+
+		public async Task DeleteLocalFileAsync(MobileServiceFile fileName)
+		{
+			string localPath = await GetLocalFilePathAsync(fileName.ParentId, fileName.Name);
+			var checkExists = await FileSystem.Current.LocalStorage.CheckExistsAsync(localPath);
+
+			if (checkExists == ExistenceCheckResult.FileExists)
+			{
+				var file = await FileSystem.Current.LocalStorage.GetFileAsync(localPath);
+				await file.DeleteAsync();
+			}
+		}
+
         public async Task DownloadFileAsync<T>(IMobileServiceSyncTable<T> table, MobileServiceFile file, string filename)
         {
             var path = await FileHelper.GetLocalFilePathAsync(file.ParentId, file.Name);
@@ -47,5 +76,18 @@ namespace XamarinTodo.UWP.Services
                 result = await folder.CreateFolderAsync(path);
             return result.Name;
         }
+
+		public async Task<string> GetLocalFilePathAsync(string itemId, string fileName)
+		{
+			string recordFilesPath = PortablePath.Combine(await GetItemFilesPathAsync(), itemId);
+
+			var checkExists = await FileSystem.Current.LocalStorage.CheckExistsAsync(recordFilesPath);
+			if (checkExists == ExistenceCheckResult.NotFound)
+			{
+				await FileSystem.Current.LocalStorage.CreateFolderAsync(recordFilesPath, CreationCollisionOption.ReplaceExisting);
+			}
+
+			return PortablePath.Combine(recordFilesPath, fileName);
+		}
     }
 }

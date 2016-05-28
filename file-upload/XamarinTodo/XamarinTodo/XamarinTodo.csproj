@@ -55,7 +55,6 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AzureCloudService.cs" />
-    <Compile Include="Services\FileHelper.cs" />
     <Compile Include="Services\ICloudService.cs" />
     <Compile Include="Services\IFileProvider.cs" />
     <Compile Include="Services\ILoginProvider.cs" />

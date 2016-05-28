@@ -1,18 +1,21 @@
 ﻿using Microsoft.WindowsAzure.MobileServices.Files;
 using System.ComponentModel;
 using XamarinTodo.Services;
+using Xamarin.Forms;
 
 namespace XamarinTodo.Models
 {
     public class TodoItemImage : INotifyPropertyChanged
     {
+		private IFileProvider fileProvider;
         private string name, uri;
 
         public TodoItemImage(MobileServiceFile file, TodoItem item)
         {
             Name = file.Name;
             File = file;
-            FileHelper.GetLocalFilePathAsync(item.Id, file.Name).ContinueWith(x => Uri = x.Result);
+			fileProvider = DependencyService.Get<IFileProvider>();
+            fileProvider.GetLocalFilePathAsync(item.Id, file.Name).ContinueWith(x => Uri = x.Result);
         }
 
         public MobileServiceFile File { get; }

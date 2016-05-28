@@ -1,22 +1,22 @@
-﻿using Microsoft.WindowsAzure.MobileServices;
-using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
-using Microsoft.WindowsAzure.MobileServices.Sync;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.MobileServices;
+using Microsoft.WindowsAzure.MobileServices.Files;
+using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
+using Microsoft.WindowsAzure.MobileServices.Sync;
 using Xamarin.Forms;
 using XamarinTodo.Models;
-using Microsoft.WindowsAzure.MobileServices.Files;
-using System.IO;
-using System.Diagnostics;
 
 namespace XamarinTodo.Services
 {
-    public class AzureCloudService : ICloudService
+	public class AzureCloudService : ICloudService
     {
 
         private IMobileServiceSyncTable<TodoItem> itemTable;
+		private IFileProvider fileProvider;
         private ILoginProvider loginProvider;
         private bool isInitialized;
 
@@ -29,6 +29,7 @@ namespace XamarinTodo.Services
 
             // Get the login provider for this service
             loginProvider = DependencyService.Get<ILoginProvider>();
+			fileProvider = DependencyService.Get<IFileProvider>();
         }
 
         public MobileServiceClient MobileService { get; set; }
@@ -118,15 +119,13 @@ namespace XamarinTodo.Services
 
         public async Task DownloadItemFileAsync(MobileServiceFile file)
         {
-            var item = await itemTable.LookupAsync(file.ParentId);
-            var path = await FileHelper.GetLocalFilePathAsync(file.ParentId, file.Name);
-            var fileProvider = DependencyService.Get<IFileProvider>();
+            var path = await fileProvider.GetLocalFilePathAsync(file.ParentId, file.Name);
             await fileProvider.DownloadFileAsync(itemTable, file, path);
         }
 
         public async Task<MobileServiceFile> AddItemImageAsync(TodoItem item, string image)
         {
-            var path = await FileHelper.CopyItemFileAsync(item.Id, image);
+            var path = await fileProvider.CopyItemFileAsync(item.Id, image);
             return await itemTable.AddFileAsync(item, Path.GetFileName(path));
         }
 

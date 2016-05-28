@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage x:Class="XamarinTodo.Pages.ItemDetail"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
@@ -8,8 +8,7 @@
             <Entry Text="{Binding Item.Text}" />
             <Label Text="Completed?" />
             <Switch IsToggled="{Binding Item.Complete}" />
-            <ListView x:Name="imagesList"
-                      IsPullToRefreshEnabled="false"
+            <ListView IsPullToRefreshEnabled="false"
                       ItemsSource="{Binding Images}">
                 <ListView.ItemTemplate>
                     <DataTemplate>

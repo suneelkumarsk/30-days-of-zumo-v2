@@ -30,9 +30,11 @@ namespace XamarinTodo.ViewModels
             }
             cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
 
-            // Load the Images async
-            Images = new ObservableCollection<TodoItemImage>();
+			// Load the Images async
+			Images = new ObservableCollection<TodoItemImage>();
+#pragma warning disable CS4014 // Statement is not awaited
             LoadImagesAsync();
+#pragma warning restore CS4014 // Statement is not awaited
         }
 
         public TodoItem Item { get; set; }
