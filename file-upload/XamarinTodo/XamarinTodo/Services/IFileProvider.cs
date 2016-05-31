@@ -7,7 +7,6 @@ namespace XamarinTodo.Services
 {
     public interface IFileProvider
     {
-        Task<string> GetItemFilesPathAsync();
         Task<IMobileServiceFileDataSource> GetFileDataSource(MobileServiceFileMetadata metadata);
         Task<string> GetImageAsync();
         Task DownloadFileAsync<T>(IMobileServiceSyncTable<T> table, MobileServiceFile file, string filename);

@@ -38,7 +38,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\EntityData.cs" />
     <Compile Include="Helpers\Locations.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Models\StorageTokenViewModel.cs" />

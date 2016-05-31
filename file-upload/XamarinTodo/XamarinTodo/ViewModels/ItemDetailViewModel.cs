@@ -119,13 +119,16 @@ namespace XamarinTodo.ViewModels
                 var image = await DependencyService.Get<IFileProvider>().GetImageAsync();
                 if (image != null)
                 {
+                    UserDialogs.Instance.ShowLoading("Saving Image to the Cloud");
                     var file = await cloudService.AddItemImageAsync(Item, image);
                     var attachedImage = new TodoItemImage(file, Item);
                     Images.Add(attachedImage);
+                    UserDialogs.Instance.HideLoading();
                 }
             }
             catch (Exception ex)
             {
+                UserDialogs.Instance.HideLoading();
                 UserDialogs.Instance.ShowError(ex.Message);
             }
             finally

@@ -127,7 +127,8 @@ namespace XamarinTodo.Services
         {
             var path = await fileProvider.CopyItemFileAsync(item.Id, image);
             var fileName = Path.GetFileName(path);
-            return await itemTable.AddFileAsync(item, fileName);
+            var msFile = await itemTable.AddFileAsync(item, fileName);
+            return msFile;
         }
 
         public async Task<IEnumerable<MobileServiceFile>> GetItemImageFilesAsync(TodoItem item)

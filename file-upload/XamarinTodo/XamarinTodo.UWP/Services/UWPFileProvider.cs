@@ -94,20 +94,6 @@ namespace XamarinTodo.UWP.Services
         }
 
         /// <summary>
-        /// Get the path to the local storage for files (create folder if it doesn't exist
-        /// </summary>
-        /// <returns>The path to the local storage area</returns>
-        public async Task<string> GetItemFilesPathAsync()
-        {
-            var folder = ApplicationData.Current.LocalFolder;
-            var path = "TodoItemFiles";
-            var result = await folder.TryGetItemAsync(path);
-            if (result == null)
-                result = await folder.CreateFolderAsync(path);
-            return result.Path;
-        }
-
-        /// <summary>
         /// Get the local storage path for a specific file attached to a specific item, creating the folder if necessary
         /// </summary>
         /// <param name="itemId">The ID of the item the file is attached to</param>
@@ -115,16 +101,20 @@ namespace XamarinTodo.UWP.Services
         /// <returns></returns>
 		public async Task<string> GetLocalFilePathAsync(string itemId, string fileName)
 		{
-			string recordFilesPath = Path.Combine(await GetItemFilesPathAsync(), itemId);
+            var localStateFolder = ApplicationData.Current.LocalFolder;
+            var tableStorageName = "TodoItemFiles";
 
-            try
-            {
-                var storagePath = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(recordFilesPath));
-                await storagePath.CreateFolderAsync(Path.GetFileName(recordFilesPath), CreationCollisionOption.FailIfExists);
-            }
-            catch (Exception) { /* if CreateFolderAsync exists, then don't fail */ }
+            // Get a Storage Folder for the tableStorageName, creating it if necessary
+            var tableStorageFolder = await CreateFolderIfNotExistsAsync(localStateFolder, tableStorageName);
 
-			return Path.Combine(recordFilesPath, fileName);
+            // Get a StorageFolder for the item, creating it if necessary
+            var itemStorageFolder = await CreateFolderIfNotExistsAsync(tableStorageFolder, itemId);
+
+            // Return the fully qualified path name of the file
+            return Path.Combine(itemStorageFolder.Path, fileName);
 		}
+
+        private async Task<StorageFolder> CreateFolderIfNotExistsAsync(StorageFolder folder, string name)
+            => await folder.CreateFolderAsync(name, CreationCollisionOption.OpenIfExists);
     }
 }

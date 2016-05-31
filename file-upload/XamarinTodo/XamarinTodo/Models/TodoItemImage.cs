@@ -11,15 +11,22 @@ namespace XamarinTodo.Models
     {
 		private IFileProvider fileProvider;
         private string name, uri;
+        private TodoItem todoitem;
 
         public TodoItemImage(MobileServiceFile file, TodoItem item)
         {
             Name = file.Name;
             File = file;
+            todoitem = item;
             fileProvider = DependencyService.Get<IFileProvider>();
-            Uri = fileProvider.GetLocalFilePathAsync(item.Id, file.Name).ContinueWith(t => { return t.Result; }).Result;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            InitializeUriAsync();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
-
+        private async Task InitializeUriAsync()
+        {
+            Uri = await fileProvider.GetLocalFilePathAsync(todoitem.Id, Name);
+        }
         public MobileServiceFile File { get; }
 
         public string Name
@@ -33,7 +40,6 @@ namespace XamarinTodo.Models
             get { return uri; }
             set { uri = value;  OnPropertyChanged(nameof(Uri)); }
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
