@@ -102,7 +102,7 @@ namespace XamarinTodo.Services
 
             if (item.Id == null)
             {
-                item.Id = Guid.NewGuid().ToString("N");
+                item.Id = Guid.NewGuid().ToString();
                 await itemTable.InsertAsync(item);
             }
             else

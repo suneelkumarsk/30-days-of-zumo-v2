@@ -11,8 +11,6 @@ namespace XamarinTodo.Services
         Task<IMobileServiceFileDataSource> GetFileDataSource(MobileServiceFileMetadata metadata);
         Task<string> GetImageAsync();
         Task DownloadFileAsync<T>(IMobileServiceSyncTable<T> table, MobileServiceFile file, string filename);
-
-		// Normally in the FileHelper
 		Task<string> CopyItemFileAsync(string itemId, string filePath);
 		Task<string> GetLocalFilePathAsync(string itemId, string fileName);
 		Task DeleteLocalFileAsync(MobileServiceFile fileName);
