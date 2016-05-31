@@ -52,13 +52,7 @@ namespace XamarinTodo.ViewModels
 
         #region Commands
         Command c_save;
-        public Command SaveCommand
-        {
-            get
-            {
-                return c_save ?? (c_save = new Command(async () => ExecuteSaveCommand()));
-            }
-        }
+        public Command SaveCommand => c_save ?? (c_save = new Command(async () => ExecuteSaveCommand()));
 
         async Task ExecuteSaveCommand()
         {
@@ -87,13 +81,7 @@ namespace XamarinTodo.ViewModels
         }
 
         Command c_delete;
-        public Command DeleteCommand
-        {
-            get
-            {
-                return c_delete ?? (c_delete = new Command(async () => ExecuteDeleteCommand()));
-            }
-        }
+        public Command DeleteCommand => c_delete ?? (c_delete = new Command(async () => ExecuteDeleteCommand()));
 
         async Task ExecuteDeleteCommand()
         {
@@ -119,13 +107,7 @@ namespace XamarinTodo.ViewModels
         }
 
         Command c_addimage;
-        public Command AddImageCommand
-        {
-            get
-            {
-                return c_addimage ?? (c_addimage = new Command(async () => ExecuteAddImageCommand()));
-            }
-        }
+        public Command AddImageCommand => c_addimage ?? (c_addimage = new Command(async () => ExecuteAddImageCommand()));
 
         async Task ExecuteAddImageCommand()
         {
@@ -137,8 +119,9 @@ namespace XamarinTodo.ViewModels
                 var image = await DependencyService.Get<IFileProvider>().GetImageAsync();
                 if (image != null)
                 {
-                    MobileServiceFile file = await cloudService.AddItemImageAsync(Item, image);
-                    Images.Add(new TodoItemImage(file, Item));
+                    var file = await cloudService.AddItemImageAsync(Item, image);
+                    var attachedImage = new TodoItemImage(file, Item);
+                    Images.Add(attachedImage);
                 }
             }
             catch (Exception ex)

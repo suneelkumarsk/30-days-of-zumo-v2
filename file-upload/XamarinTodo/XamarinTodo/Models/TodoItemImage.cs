@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using XamarinTodo.Services;
 using Xamarin.Forms;
+using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace XamarinTodo.Models
 {
@@ -14,8 +16,8 @@ namespace XamarinTodo.Models
         {
             Name = file.Name;
             File = file;
-			fileProvider = DependencyService.Get<IFileProvider>();
-            fileProvider.GetLocalFilePathAsync(item.Id, file.Name).ContinueWith(x => Uri = x.Result);
+            fileProvider = DependencyService.Get<IFileProvider>();
+            Uri = fileProvider.GetLocalFilePathAsync(item.Id, file.Name).ContinueWith(t => { return t.Result; }).Result;
         }
 
         public MobileServiceFile File { get; }
