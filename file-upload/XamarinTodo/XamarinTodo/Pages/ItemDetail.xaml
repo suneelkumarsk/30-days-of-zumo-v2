@@ -8,8 +8,7 @@
             <Entry Text="{Binding Item.Text}" />
             <Label Text="Completed?" />
             <Switch IsToggled="{Binding Item.Complete}" />
-            <ListView IsPullToRefreshEnabled="false"
-                      ItemsSource="{Binding Images}">
+            <ListView IsPullToRefreshEnabled="false" ItemsSource="{Binding Images}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ImageCell ImageSource="{Binding Uri}" Text="{Binding Name}" />

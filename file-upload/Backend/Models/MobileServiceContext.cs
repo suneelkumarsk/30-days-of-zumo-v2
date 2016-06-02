@@ -27,6 +27,7 @@ namespace Backend.Models
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
