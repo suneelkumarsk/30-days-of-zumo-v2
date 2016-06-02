@@ -34,7 +34,7 @@ namespace Backend.Controllers
             Debug.WriteLine($"[GetStorageTokenController] Get()");
             var claimsPrincipal = User as ClaimsPrincipal;
             var sid = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value.Substring(4); // Strips off the sid:
-            string containerName = $"container-{sid}";
+            string containerName = $"container";
             Debug.WriteLine($"[GetStorageTokenController] Container Name = {containerName}");
 
 

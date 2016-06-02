@@ -16,6 +16,7 @@ namespace XamarinTodo.Services
     {
 
         private IMobileServiceSyncTable<TodoItem> itemTable;
+        private IMobileServiceSyncTable<Models.Image> imageTable;
 		private IFileProvider fileProvider;
         private ILoginProvider loginProvider;
         private bool isInitialized;
@@ -63,6 +64,7 @@ namespace XamarinTodo.Services
 
             var store = new MobileServiceSQLiteStore("xamarintodo.db");
             store.DefineTable<TodoItem>();
+            store.DefineTable<Models.Image>();
 
             // Initialize File Sync
             MobileService.InitializeFileSyncContext(new TodoItemFileSyncHandler(), store);
@@ -74,8 +76,25 @@ namespace XamarinTodo.Services
 
             // Get a reference to the sync table
             itemTable = MobileService.GetSyncTable<TodoItem>();
+            imageTable = MobileService.GetSyncTable<Models.Image>();
 
             isInitialized = true;
+
+            // Add a single item into the image table if there aren't any
+            // This forces creation.
+            var list = await imageTable.ToListAsync();
+            if (list.Count == 0)
+            {
+                var image = new Models.Image
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Filename = "dummy",
+                    Height = 0,
+                    Width = 0
+                };
+                await imageTable.InsertAsync(image);
+                await SynchronizeServiceAsync();
+            }
         }
 
         public async Task LoginAsync()
@@ -94,6 +113,7 @@ namespace XamarinTodo.Services
             await MobileService.SyncContext.PushAsync();
             await itemTable.PushFileChangesAsync();
             await itemTable.PullAsync("allitems", itemTable.CreateQuery());
+            await imageTable.PullAsync("allimages", imageTable.CreateQuery());
         }
 
         public async Task<TodoItem> UpsertItemAsync(TodoItem item)
