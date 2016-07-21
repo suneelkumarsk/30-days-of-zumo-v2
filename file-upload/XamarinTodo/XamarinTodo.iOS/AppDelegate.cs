@@ -23,6 +23,7 @@ namespace XamarinTodo.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             SQLitePCL.CurrentPlatform.Init();
+            Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
 
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
