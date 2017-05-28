@@ -1,0 +1,117 @@
+﻿<Page x:Class="Shellmonger.TaskList.Pages.PeoplePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="using:Shellmonger.TaskList.Pages"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+    <Page.Resources>
+        <Storyboard x:Name="RefreshIconRotation"
+                    AutoReverse="False"
+                    RepeatBehavior="Forever">
+            <DoubleAnimation Duration="0:0:1"
+                             Storyboard.TargetName="RefreshIcon"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)"
+                             To="360" />
+        </Storyboard>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="TitleBar"
+              Grid.Row="0"
+              Background="Teal">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Style="{StaticResource Title}">People</TextBlock>
+            <StackPanel x:Name="TitleBarIcons"
+                        Grid.Column="1"
+                        Orientation="Horizontal">
+                <SymbolIcon Style="{StaticResource TitleIcon}"
+                            Symbol="List"
+                            Tapped="Tasks_Click" />
+                <SymbolIcon x:Name="LogoutIcon"
+                            Style="{StaticResource TitleIcon}"
+                            Symbol="HangUp"
+                            Tapped="HangUp_Click" />
+            </StackPanel>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Auto">
+            <ListView x:Name="PeopleListView"
+                      Margin="5,5,0,0"
+                      IsItemClickEnabled="False"
+                      SelectionMode="None">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="nameField"
+                                     Grid.Column="0"
+                                     KeyDown="nameField_KeyDown"
+                                     Style="{StaticResource TaskBox}"
+                                     Text="{Binding Viewer}" />
+                            <SymbolIcon x:Name="nameDelete"
+                                        Grid.Column="1"
+                                        Foreground="Red"
+                                        Symbol="Delete"
+                                        Tapped="nameField_Delete" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+        <Grid x:Name="AppBar"
+              Grid.Row="2"
+              Background="Teal"
+              Padding="8,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel x:Name="AppBarLeftIcons"
+                        Grid.Column="0"
+                        Orientation="Horizontal">
+                <SymbolIcon x:Name="AddFriendIcon"
+                            Style="{StaticResource TitleIcon}"
+                            Symbol="AddFriend"
+                            Tapped="AddFriendIcon_Click" />
+            </StackPanel>
+            <StackPanel x:Name="AppBarRightIcons"
+                        Grid.Column="1"
+                        Orientation="Horizontal">
+                <SymbolIcon x:Name="RefreshIcon"
+                            RenderTransformOrigin="0.5,0.5"
+                            Style="{StaticResource TitleIcon}"
+                            Symbol="Sync"
+                            Tapped="RefreshIcon_Click">
+                    <SymbolIcon.RenderTransform>
+                        <CompositeTransform />
+                    </SymbolIcon.RenderTransform>
+                </SymbolIcon>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</Page>
